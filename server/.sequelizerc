@@ -1,0 +1,13 @@
+'use strict';
+
+const path = require('path');
+
+// This file tells Sequelize CLI where to find each part of the project.
+// Without this, the CLI would look in default locations that do not match
+// our folder structure.
+module.exports = {
+  config: path.resolve('config', 'database.js'),
+  'models-path': path.resolve('models'),
+  'migrations-path': path.resolve('migrations'),
+  'seeders-path': path.resolve('seeders'),
+};

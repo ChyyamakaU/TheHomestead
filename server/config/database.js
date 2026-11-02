@@ -21,10 +21,10 @@ const sequelize = new Sequelize(
     logging: process.env.NODE_ENV === 'development' ? console.log : false,
 
     pool: {
-      max: 10,      // Maximum number of connections in the pool
-      min: 0,       // Minimum number of connections in the pool
-      acquire: 30000, // Maximum ms to wait before throwing an error when acquiring a connection
-      idle: 10000,  // Maximum ms a connection can be idle before being released
+      max: 10,       // Maximum number of connections in the pool
+      min: 0,        // Minimum number of connections in the pool
+      acquire: 30000, // Max ms to wait when acquiring a connection
+      idle: 10000,   // Max ms a connection can sit idle before release
     },
   }
 );
@@ -45,4 +45,40 @@ const connectToDatabase = async () => {
   }
 };
 
-module.exports = { sequelize, connectToDatabase };
+// ---------------------------------------------------------------------------
+// Sequelize CLI configuration
+// The CLI requires a plain config object — it cannot use the Sequelize
+// instance above. We export it under `module.exports` so that .sequelizerc
+// can point the CLI directly at this file.
+// The app uses the named exports { sequelize, connectToDatabase }.
+// ---------------------------------------------------------------------------
+module.exports = {
+  sequelize,
+  connectToDatabase,
+
+  // CLI config — reads the same env vars the app uses
+  development: {
+    username: process.env.DB_USER,
+    password: process.env.DB_PASSWORD,
+    database: process.env.DB_NAME,
+    host: process.env.DB_HOST || 'localhost',
+    port: process.env.DB_PORT || 5432,
+    dialect: 'postgres',
+  },
+  test: {
+    username: process.env.DB_USER,
+    password: process.env.DB_PASSWORD,
+    database: process.env.DB_NAME,
+    host: process.env.DB_HOST || 'localhost',
+    port: process.env.DB_PORT || 5432,
+    dialect: 'postgres',
+  },
+  production: {
+    username: process.env.DB_USER,
+    password: process.env.DB_PASSWORD,
+    database: process.env.DB_NAME,
+    host: process.env.DB_HOST || 'localhost',
+    port: process.env.DB_PORT || 5432,
+    dialect: 'postgres',
+  },
+};
