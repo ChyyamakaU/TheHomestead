@@ -1,19 +1,27 @@
 'use strict';
 
 const { sequelize } = require('../config/database');
+const User = require('./User');
 
-// This file is the central registry for all Sequelize models.
-// As models are created in later phases, they will be imported
-// here and any associations between them will be defined here.
-//
-// This pattern keeps all relationship definitions in one place
-// rather than scattered across individual model files.
+// Central registry for all Sequelize models.
+// Every model is imported here and exported as part of the db object.
+// Associations between models are also defined here, keeping
+// relationship logic in one place rather than scattered across files.
 
 const db = {
   sequelize,
-  // Models will be added here in Phase 3 onwards, for example:
-  // User: require('./User'),
+  User,
+  // Future models will be added here, for example:
   // Apartment: require('./Apartment'),
+  // Application: require('./Application'),
 };
+
+// ---------------------------------------------------------------------------
+// Associations
+// Define relationships between models here as they are introduced.
+// Example:
+//   db.Apartment.hasMany(db.Application, { foreignKey: 'apartment_id' });
+//   db.Application.belongsTo(db.Apartment, { foreignKey: 'apartment_id' });
+// ---------------------------------------------------------------------------
 
 module.exports = db;

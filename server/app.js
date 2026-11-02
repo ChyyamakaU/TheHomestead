@@ -59,10 +59,15 @@ app.get('/api/health', (req, res) => {
 
 // ---------------------------------------------------------------------------
 // API routes
-// Route files will be mounted here as they are created in later phases.
+// ---------------------------------------------------------------------------
+const authRoutes = require('./routes/auth');
+
+app.use('/api/auth', authRoutes);
+
+// Additional route files will be mounted here as they are created.
 // Example:
-//   const authRoutes = require('./routes/auth');
-//   app.use('/api/auth', authRoutes);
+//   const apartmentRoutes = require('./routes/apartments');
+//   app.use('/api/apartments', apartmentRoutes);
 // ---------------------------------------------------------------------------
 
 // ---------------------------------------------------------------------------
