@@ -35,20 +35,54 @@
   position: absolute;
   top: 0; left: 0; right: 0; bottom: 0;
   background-size: cover;
-  background-position: center;
+  background-position: center center;
   z-index: 0;
 }
 .hero__overlay {
   position: absolute;
   top: 0; left: 0; right: 0; bottom: 0;
-  background: linear-gradient(135deg, rgba(238, 242, 245, 0.92) 0%, rgba(238, 242, 245, 0.75) 100%);
+  /* Semi-dark scrim on the left backs the text against the dark image wall.
+     Fades to transparent on the right so the room detail shows through. */
+  background: linear-gradient(
+    to right,
+    rgba(20, 33, 61, 0.62) 0%,
+    rgba(20, 33, 61, 0.38) 40%,
+    rgba(20, 33, 61, 0.08) 68%,
+    rgba(20, 33, 61, 0) 100%
+  );
   z-index: 1;
 }
 .hero__content {
   position: relative;
   z-index: 2;
   padding-block: var(--space-2xl);
-  max-width: 720px;
+  max-width: 620px;
+}
+
+/* ── Hero text: white on the dark midnight scrim ──────────── */
+.hero__content .hero-heading {
+  color: var(--white);
+  text-shadow: 0 2px 12px rgba(20, 33, 61, 0.4);
+  margin-bottom: var(--space-sm);
+}
+.hero__content .hero__intro {
+  color: rgba(255, 255, 255, 0.90);
+  text-shadow: 0 1px 6px rgba(20, 33, 61, 0.35);
+}
+.hero__content .hero__secondary-link {
+  color: var(--brass-light);
+  text-shadow: 0 1px 4px rgba(20, 33, 61, 0.4);
+}
+.hero__content .hero__secondary-link:hover {
+  color: var(--white);
+}
+
+/* ── Hero search panel: white surface ────────────────────── */
+.hero-search {
+  background-color: rgba(255, 255, 255, 0.96);
+  border-radius: var(--radius-lg);
+  padding: var(--space-md);
+  box-shadow: 0 4px 24px rgba(20, 33, 61, 0.22);
 }
 .hero-heading {
   margin-bottom: var(--space-sm);
@@ -536,6 +570,16 @@
   }
   .hero__content {
     padding-block: var(--space-lg);
+    max-width: 100%;
+  }
+  /* On mobile: stronger top scrim so stacked text reads clearly */
+  .hero__overlay {
+    background: linear-gradient(
+      to bottom,
+      rgba(20, 33, 61, 0.70) 0%,
+      rgba(20, 33, 61, 0.40) 55%,
+      rgba(20, 33, 61, 0.10) 100%
+    );
   }
   .apartment-detail__title {
     font-size: 28px;

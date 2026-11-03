@@ -4,7 +4,7 @@ import ApartmentCard from '../../components/apartments/ApartmentCard';
 import Spinner from '../../components/ui/Spinner';
 import EmptyState from '../../components/ui/EmptyState';
 import { getPublicApartments, getFilterOptions } from '../../api/public';
-import heroImage from '../../assets/hero.png';
+import heroBg from '../../assets/hero-bg.jpg';
 
 /**
  * HomePage — the main discovery page.
@@ -61,7 +61,7 @@ export default function HomePage() {
     <div className="home">
       {/* ─── HERO SECTION ─────────────────────────────────── */}
       <section className="hero">
-        <div className="hero__bg" style={{ backgroundImage: `url(${heroImage})` }} />
+        <div className="hero__bg" style={{ backgroundImage: `url(${heroBg})` }} />
         <div className="hero__overlay" />
         <div className="container hero__content">
           <h1 className="hero-heading">A place to call home.</h1>
