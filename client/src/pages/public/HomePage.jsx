@@ -131,6 +131,27 @@ export default function HomePage() {
         </div>
       </section>
 
+      {/* ─── ABOUT INTRO ─────────────────────────────────── */}
+      <section className="section section--greige">
+        <div className="container about-intro">
+          <div className="about-intro__content">
+            <h2>About Homestead</h2>
+            <p className="text-intro">
+              The Homestead is an apartment discovery and rental enquiry platform
+              that helps people find suitable apartments through attractive listings,
+              clear property information and a straightforward enquiry process.
+            </p>
+            <p className="about-intro__text">
+              Our goal is to make apartment browsing enjoyable and to help you feel
+              confident about taking the next step towards finding a home.
+            </p>
+            <Link to="/about" className="about-intro__link">
+              Learn more about us →
+            </Link>
+          </div>
+        </div>
+      </section>
+
       {/* ─── FEATURED APARTMENTS ──────────────────────────── */}
       <section className="section section--mist">
         <div className="container">
@@ -266,27 +287,6 @@ export default function HomePage() {
             Explore available apartments and take the first step towards finding a place you'll love.
           </p>
           <Link to="/apartments" className="btn btn--brass btn--lg">Explore apartments</Link>
-        </div>
-      </section>
-
-      {/* ─── ABOUT INTRO ─────────────────────────────────── */}
-      <section className="section section--mist-light">
-        <div className="container about-intro">
-          <div className="about-intro__content">
-            <h2>About Homestead</h2>
-            <p className="text-intro">
-              The Homestead is an apartment discovery and rental enquiry platform
-              that helps people find suitable apartments through attractive listings,
-              clear property information and a straightforward enquiry process.
-            </p>
-            <p className="about-intro__text">
-              Our goal is to make apartment browsing enjoyable and to help you feel
-              confident about taking the next step towards finding a home.
-            </p>
-            <Link to="/about" className="about-intro__link">
-              Learn more about us →
-            </Link>
-          </div>
         </div>
       </section>
     </div>
