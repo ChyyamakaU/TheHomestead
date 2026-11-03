@@ -1,0 +1,549 @@
+/* ============================================================
+   PUBLIC PAGES — Home, Apartments, Detail, About, Contact,
+   FAQ, Legal pages, 404
+   ============================================================ */
+
+/* ─── SECTION HEADING ─────────────────────────────────────── */
+.section-heading {
+  text-align: center;
+  margin-bottom: var(--space-lg);
+}
+.section-heading h2 {
+  margin-bottom: 12px;
+}
+.section-heading__sub {
+  color: var(--stone-deep);
+  max-width: 520px;
+  margin: 0 auto;
+}
+.section-heading__link {
+  text-align: center;
+  margin-top: var(--space-lg);
+  display: flex;
+  justify-content: center;
+}
+
+/* ─── HERO ────────────────────────────────────────────────── */
+.hero {
+  position: relative;
+  min-height: 580px;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+}
+.hero__bg {
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background-size: cover;
+  background-position: center;
+  z-index: 0;
+}
+.hero__overlay {
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: linear-gradient(135deg, rgba(238, 242, 245, 0.92) 0%, rgba(238, 242, 245, 0.75) 100%);
+  z-index: 1;
+}
+.hero__content {
+  position: relative;
+  z-index: 2;
+  padding-block: var(--space-2xl);
+  max-width: 720px;
+}
+.hero-heading {
+  margin-bottom: var(--space-sm);
+}
+.hero__intro {
+  margin-bottom: var(--space-md);
+  max-width: 560px;
+}
+.hero__actions {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+  margin-top: var(--space-md);
+}
+.hero__secondary-link {
+  font-size: 16px;
+  font-weight: 500;
+  color: var(--midnight);
+  text-decoration: underline;
+  transition: color var(--transition);
+}
+.hero__secondary-link:hover {
+  color: var(--brass-dark);
+}
+
+/* ─── APARTMENT GRID ──────────────────────────────────────── */
+.apartment-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-md);
+}
+
+/* ─── CATEGORY GRID ───────────────────────────────────────── */
+.category-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: var(--space-sm);
+}
+.category-card {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: var(--space-sm) var(--space-md);
+  background-color: var(--white);
+  border: 1px solid var(--stone-light);
+  border-radius: var(--radius-lg);
+  transition: box-shadow var(--transition), border-color var(--transition);
+}
+.category-card:hover {
+  box-shadow: var(--shadow-card);
+  border-color: var(--brass);
+}
+.category-card__icon {
+  font-size: 24px;
+  color: var(--brass);
+}
+.category-card__label {
+  font-size: 16px;
+  font-weight: 500;
+  color: var(--midnight);
+}
+
+/* ─── FEATURE GRID (Why choose) ───────────────────────────── */
+.feature-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-md);
+}
+.feature-card {
+  text-align: center;
+  padding: var(--space-md);
+  background-color: var(--white);
+  border: 1px solid var(--stone-light);
+  border-radius: var(--radius-lg);
+}
+.feature-card__icon {
+  font-size: 32px;
+  color: var(--brass);
+  margin-bottom: var(--space-sm);
+}
+.feature-card__title {
+  font-size: 20px;
+  margin-bottom: 8px;
+}
+.feature-card__text {
+  color: var(--stone-deep);
+  font-size: 15px;
+}
+
+/* ─── STEPS GRID (How it works) ────────────────────────────── */
+.steps-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-md);
+}
+.step-card {
+  text-align: center;
+  padding: var(--space-md);
+}
+.step-card__number {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background-color: var(--midnight);
+  color: var(--brass);
+  font-size: 20px;
+  font-weight: 600;
+  margin-bottom: var(--space-sm);
+}
+.step-card__title {
+  font-size: 20px;
+  margin-bottom: 8px;
+}
+.step-card__text {
+  color: var(--stone-deep);
+  font-size: 15px;
+}
+
+/* ─── CLOSING CTA ─────────────────────────────────────────── */
+.closing-cta__inner {
+  text-align: center;
+  max-width: 600px;
+  margin: 0 auto;
+}
+.closing-cta__heading {
+  color: var(--mist);
+  margin-bottom: var(--space-sm);
+}
+.closing-cta__text {
+  color: var(--footer-link);
+  font-size: 20px;
+  line-height: 1.6;
+  margin-bottom: var(--space-md);
+}
+
+/* ─── ABOUT INTRO ─────────────────────────────────────────── */
+.about-intro__content {
+  max-width: 640px;
+}
+.about-intro__content h2 {
+  margin-bottom: var(--space-sm);
+}
+.about-intro__text {
+  color: var(--stone-deep);
+  font-size: 17px;
+  margin-bottom: var(--space-sm);
+}
+.about-intro__link {
+  font-size: 16px;
+  font-weight: 500;
+  color: var(--brass-dark);
+  text-decoration: underline;
+  transition: color var(--transition);
+}
+.about-intro__link:hover {
+  color: var(--brass);
+}
+
+/* ─── PAGE HEADER (apartments list, about, etc.) ──────────── */
+.page-header {
+  background-color: var(--midnight);
+  padding-block: var(--space-xl) var(--space-lg);
+}
+.page-header__inner {
+  max-width: var(--container-max);
+  margin-inline: auto;
+  padding-inline: var(--container-padding);
+}
+.page-header h1 {
+  color: var(--mist);
+  margin-bottom: 8px;
+}
+.page-header__sub {
+  color: var(--footer-link);
+  font-size: 18px;
+}
+
+/* ─── APARTMENTS LIST PAGE ────────────────────────────────── */
+.apartments-page {
+  min-height: 60vh;
+}
+.apartments-page__filters {
+  background-color: var(--white);
+  border: 1px solid var(--stone-light);
+  border-radius: var(--radius-lg);
+  padding: var(--space-md);
+  margin-bottom: var(--space-md);
+  box-shadow: var(--shadow-card);
+}
+.apartments-page__bar {
+  margin-bottom: var(--space-sm);
+}
+.apartments-page__results-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: var(--space-md);
+  flex-wrap: wrap;
+  gap: var(--space-xs);
+}
+.apartments-page__count {
+  font-size: 16px;
+  color: var(--stone-deep);
+}
+.apartments-page__clear {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--brass-dark);
+  text-decoration: underline;
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+/* ─── APARTMENT DETAIL PAGE ───────────────────────────────── */
+.apartment-detail {
+  padding-block: var(--space-lg);
+}
+.apartment-detail__back {
+  font-size: 15px;
+  color: var(--brass-dark);
+  margin-bottom: var(--space-sm);
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  transition: color var(--transition);
+}
+.apartment-detail__back:hover {
+  color: var(--brass);
+}
+.apartment-detail__title {
+  font-size: 36px;
+  margin-bottom: 8px;
+}
+.apartment-detail__location {
+  font-size: 17px;
+  color: var(--stone-deep);
+  margin-bottom: var(--space-md);
+}
+.apartment-detail__layout {
+  display: grid;
+  grid-template-columns: 1fr 380px;
+  gap: var(--space-lg);
+  align-items: start;
+}
+.apartment-detail__main {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-lg);
+}
+.apartment-detail__section h3 {
+  font-size: 24px;
+  margin-bottom: var(--space-sm);
+}
+.apartment-detail__description {
+  font-size: 17px;
+  line-height: 1.65;
+  color: var(--stone-deep);
+}
+.apartment-detail__specs {
+  display: flex;
+  gap: var(--space-sm);
+  flex-wrap: wrap;
+}
+.apartment-detail__spec {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: var(--space-sm);
+  background-color: var(--white);
+  border: 1px solid var(--stone-light);
+  border-radius: var(--radius-md);
+  min-width: 100px;
+}
+.apartment-detail__spec-value {
+  font-size: 22px;
+  font-weight: 600;
+  color: var(--midnight);
+}
+.apartment-detail__spec-label {
+  font-size: 13px;
+  color: var(--stone-deep);
+  margin-top: 2px;
+}
+
+/* ─── ABOUT PAGE ──────────────────────────────────────────── */
+.about-page {
+  padding-block: var(--space-xl);
+}
+.about-page__content {
+  max-width: 700px;
+}
+.about-page__content h2 {
+  margin-top: var(--space-lg);
+  margin-bottom: var(--space-sm);
+}
+.about-page__content p {
+  margin-bottom: var(--space-sm);
+  color: var(--stone-deep);
+}
+
+/* ─── CONTACT PAGE ────────────────────────────────────────── */
+.contact-page {
+  padding-block: var(--space-xl);
+}
+.contact-page__content {
+  max-width: 600px;
+  margin: 0 auto;
+  text-align: center;
+}
+.contact-page__note {
+  font-size: 18px;
+  color: var(--stone-deep);
+  padding: var(--space-md);
+  background-color: var(--white);
+  border: 1px solid var(--stone-light);
+  border-radius: var(--radius-lg);
+}
+
+/* ─── FAQ PAGE ────────────────────────────────────────────── */
+.faq-page {
+  padding-block: var(--space-xl);
+}
+.faq-page__search {
+  margin-bottom: var(--space-lg);
+}
+.faq-category {
+  margin-bottom: var(--space-lg);
+}
+.faq-category__title {
+  font-size: 24px;
+  margin-bottom: var(--space-sm);
+  padding-bottom: 8px;
+  border-bottom: 2px solid var(--stone-light);
+}
+.faq-accordion__item {
+  border: 1px solid var(--stone-light);
+  border-radius: var(--radius-md);
+  margin-bottom: var(--space-xs);
+  overflow: hidden;
+  background-color: var(--white);
+}
+.faq-accordion__question {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 16px 20px;
+  font-family: var(--font-body);
+  font-size: 16px;
+  font-weight: 500;
+  color: var(--midnight);
+  text-align: left;
+  cursor: pointer;
+  transition: background-color var(--transition);
+}
+.faq-accordion__question:hover {
+  background-color: var(--mist);
+}
+.faq-accordion__icon {
+  font-size: 20px;
+  color: var(--brass-dark);
+  transition: transform var(--transition);
+  flex-shrink: 0;
+  margin-left: 12px;
+}
+.faq-accordion__item--open .faq-accordion__icon {
+  transform: rotate(45deg);
+}
+.faq-accordion__answer {
+  padding: 0 20px;
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height var(--transition), padding var(--transition);
+}
+.faq-accordion__item--open .faq-accordion__answer {
+  padding: 0 20px 16px;
+  max-height: 500px;
+}
+.faq-accordion__answer p {
+  color: var(--stone-deep);
+  font-size: 15px;
+  line-height: 1.6;
+}
+.faq-page__closing {
+  text-align: center;
+  margin-top: var(--space-xl);
+  padding: var(--space-md);
+  background-color: var(--greige);
+  border-radius: var(--radius-lg);
+}
+.faq-page__closing h3 {
+  margin-bottom: var(--space-xs);
+}
+.faq-page__closing p {
+  color: var(--stone-deep);
+  margin-bottom: var(--space-sm);
+}
+
+/* ─── LEGAL PAGES ─────────────────────────────────────────── */
+.legal-page {
+  padding-block: var(--space-xl);
+}
+.legal-page__content {
+  max-width: 720px;
+  margin: 0 auto;
+}
+.legal-page__content h2 {
+  margin-top: var(--space-lg);
+  margin-bottom: var(--space-sm);
+}
+.legal-page__content h2:first-child {
+  margin-top: 0;
+}
+.legal-page__content p {
+  margin-bottom: var(--space-sm);
+  color: var(--stone-deep);
+}
+.legal-page__content ul {
+  padding-left: 20px;
+  margin-bottom: var(--space-sm);
+}
+.legal-page__content li {
+  list-style: disc;
+  color: var(--stone-deep);
+  margin-bottom: 8px;
+}
+.legal-page__notice {
+  padding: var(--space-sm) var(--space-md);
+  background-color: rgba(201, 138, 27, 0.08);
+  border: 1px solid rgba(201, 138, 27, 0.3);
+  border-radius: var(--radius-md);
+  margin-bottom: var(--space-lg);
+  font-size: 14px;
+  color: var(--warning);
+}
+
+/* ─── 404 PAGE ────────────────────────────────────────────── */
+.not-found {
+  min-height: 60vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+.not-found h1 {
+  font-size: 64px;
+  color: var(--midnight);
+  margin-bottom: var(--space-sm);
+}
+.not-found p {
+  font-size: 18px;
+  color: var(--stone-deep);
+  margin-bottom: var(--space-md);
+}
+
+/* ─── RESPONSIVE ───────────────────────────────────────────── */
+@media (max-width: 1024px) {
+  .apartment-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .apartment-detail__layout {
+    grid-template-columns: 1fr;
+  }
+  .feature-grid,
+  .steps-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .apartment-grid {
+    grid-template-columns: 1fr;
+  }
+  .feature-grid,
+  .steps-grid {
+    grid-template-columns: 1fr;
+  }
+  .hero {
+    min-height: auto;
+    padding-block: var(--space-xl);
+  }
+  .hero__content {
+    padding-block: var(--space-lg);
+  }
+  .apartment-detail__title {
+    font-size: 28px;
+  }
+}
+
+@media (max-width: 640px) {
+  .apartment-detail__specs {
+    flex-wrap: wrap;
+  }
+}
