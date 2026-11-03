@@ -2,11 +2,12 @@
 
 const { sequelize } = require('../config/database');
 
-const User            = require('./User');
-const Apartment       = require('./Apartment');
-const Amenity         = require('./Amenity');
+const User             = require('./User');
+const Apartment        = require('./Apartment');
+const Amenity          = require('./Amenity');
 const ApartmentAmenity = require('./ApartmentAmenity');
-const ApartmentImage  = require('./ApartmentImage');
+const ApartmentImage   = require('./ApartmentImage');
+const ViewingRequest   = require('./ViewingRequest');
 
 // ---------------------------------------------------------------------------
 // Associations
@@ -40,6 +41,19 @@ ApartmentImage.belongsTo(Apartment, {
   as: 'apartment',
 });
 
+// Apartment -> ViewingRequest  (one-to-many, nullable FK)
+// An apartment can have many viewing requests.
+// apartment_id is nullable so requests survive apartment deletion (SET NULL).
+Apartment.hasMany(ViewingRequest, {
+  foreignKey: 'apartment_id',
+  as: 'viewingRequests',
+  onDelete: 'SET NULL',
+});
+ViewingRequest.belongsTo(Apartment, {
+  foreignKey: 'apartment_id',
+  as: 'apartment',
+});
+
 // ---------------------------------------------------------------------------
 // db object — the central export for the entire data layer
 // ---------------------------------------------------------------------------
@@ -50,6 +64,7 @@ const db = {
   Amenity,
   ApartmentAmenity,
   ApartmentImage,
+  ViewingRequest,
 };
 
 module.exports = db;
