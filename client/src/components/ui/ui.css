@@ -5,6 +5,7 @@
    ============================================================ */
 
 /* ─── BUTTONS ────────────────────────────────────────────── */
+/* ─── BUTTONS ────────────────────────────────────────────── */
 .btn {
   display: inline-flex;
   align-items: center;
@@ -12,7 +13,7 @@
   gap: var(--space-xs);
   font-family: var(--font-body);
   font-weight: 600;
-  font-size: 16px;
+  font-size: var(--text-md);
   line-height: 1;
   border-radius: var(--radius-md);
   padding: 0 24px;
@@ -24,13 +25,13 @@
 
 .btn--sm {
   height: 38px;
-  font-size: 15px;
+  font-size: var(--text-sm);
   padding: 0 16px;
 }
 
 .btn--lg {
   height: 54px;
-  font-size: 17px;
+  font-size: var(--text-lg);
   padding: 0 32px;
 }
 
@@ -107,7 +108,7 @@
   display: inline-flex;
   align-items: center;
   font-family: var(--font-body);
-  font-size: 13px;
+  font-size: var(--text-xs);
   font-weight: 600;
   padding: 4px 12px;
   border-radius: 100px;
@@ -148,7 +149,7 @@
 .alert {
   padding: var(--space-sm) var(--space-md);
   border-radius: var(--radius-md);
-  font-size: 16px;
+  font-size: var(--text-md);
   line-height: 1.5;
   border: 1px solid transparent;
 }
@@ -243,10 +244,10 @@
   padding: var(--space-md) var(--space-md) 0;
 }
 .modal__title {
-  font-size: 21px;
+  font-size: var(--text-2xl);
 }
 .modal__close {
-  font-size: 20px;
+  font-size: var(--text-xl);
   color: var(--stone-dark);
   padding: var(--space-xs);
   border-radius: var(--radius-sm);
@@ -276,7 +277,7 @@
   height: 40px;
   padding: 0 12px;
   font-family: var(--font-body);
-  font-size: 15px;
+  font-size: var(--text-sm);
   font-weight: 500;
   color: var(--midnight);
   background-color: var(--white);
@@ -313,12 +314,12 @@
   opacity: 0.4;
 }
 .empty-state__title {
-  font-size: 26px;
+  font-size: var(--text-2xl);
   margin-bottom: var(--space-xs);
 }
 .empty-state__message {
   color: var(--stone-deep);
-  font-size: 17px;
+  font-size: var(--text-md);
   max-width: 400px;
   margin: 0 auto var(--space-md);
 }

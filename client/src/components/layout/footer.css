@@ -32,7 +32,7 @@
 }
 
 .footer__description {
-  font-size: 15px;
+  font-size: var(--text-sm);
   line-height: 1.6;
   color: var(--footer-link);
 }
@@ -40,7 +40,7 @@
 /* Footer columns */
 .footer__heading {
   font-family: var(--font-body);
-  font-size: 16px;
+  font-size: var(--text-md);
   font-weight: 600;
   color: var(--mist);
   margin-bottom: var(--space-sm);
@@ -55,7 +55,7 @@
 
 .footer__link {
   font-family: var(--font-body);
-  font-size: 15px;
+  font-size: var(--text-sm);
   font-weight: 400;
   color: var(--footer-link);
   transition: color var(--transition);
@@ -67,7 +67,7 @@
 
 /* Contact column */
 .footer__contact-note {
-  font-size: 15px;
+  font-size: var(--text-sm);
   color: var(--footer-link);
   margin-bottom: var(--space-xs);
   font-style: italic;
@@ -83,7 +83,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  font-size: 14px;
+  font-size: var(--text-sm);
   color: var(--footer-link);
 }
 

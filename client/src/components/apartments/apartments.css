@@ -42,7 +42,7 @@
   justify-content: center;
   height: 100%;
   color: var(--stone-dark);
-  font-size: 14px;
+  font-size: var(--text-sm);
   background-color: var(--greige);
 }
 
@@ -61,12 +61,12 @@
 }
 
 .apartment-card__title {
-  font-size: 22px;
+  font-size: var(--text-2xl);
   line-height: 1.2;
 }
 
 .apartment-card__location {
-  font-size: 15px;
+  font-size: var(--text-sm);
   color: var(--stone-deep);
 }
 
@@ -77,7 +77,7 @@
 }
 
 .apartment-card__spec {
-  font-size: 14px;
+  font-size: var(--text-sm);
   color: var(--stone-deep);
   padding: 4px 10px;
   background-color: var(--mist);
@@ -92,7 +92,7 @@
 }
 
 .apartment-card__amenity {
-  font-size: 14px;
+  font-size: var(--text-sm);
   color: var(--stone-deep);
 }
 
@@ -117,13 +117,13 @@
 }
 
 .apartment-card__price {
-  font-size: 21px;
+  font-size: var(--text-xl);
   font-weight: 600;
   color: var(--midnight);
 }
 
 .apartment-card__cta {
-  font-size: 15px;
+  font-size: var(--text-sm);
   font-weight: 600;
   color: var(--brass-dark);
   transition: color var(--transition);
@@ -160,7 +160,7 @@
   justify-content: center;
   height: 100%;
   color: var(--stone-dark);
-  font-size: 16px;
+  font-size: var(--text-md);
   background-color: var(--greige);
 }
 
@@ -203,19 +203,19 @@
   display: flex;
   align-items: center;
   gap: 8px;
-  font-size: 16px;
+  font-size: var(--text-md);
   color: var(--midnight);
 }
 
 .amenity-list__check {
   color: var(--brass-dark);
-  font-size: 16px;
+  font-size: var(--text-md);
   font-weight: 600;
 }
 
 .amenity-list--empty {
   color: var(--stone-dark);
-  font-size: 15px;
+  font-size: var(--text-sm);
 }
 
 /* ─── Responsive ───────────────────────────────────────────── */

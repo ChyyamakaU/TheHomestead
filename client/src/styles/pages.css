@@ -99,7 +99,7 @@
   margin-top: var(--space-md);
 }
 .hero__secondary-link {
-  font-size: 16px;
+  font-size: 19px;
   font-weight: 500;
   color: var(--midnight);
   text-decoration: underline;
@@ -160,17 +160,17 @@
   border-radius: var(--radius-lg);
 }
 .feature-card__icon {
-  font-size: 32px;
+  font-size: 34px;
   color: var(--brass);
   margin-bottom: var(--space-sm);
 }
 .feature-card__title {
-  font-size: 20px;
+  font-size: 24px;
   margin-bottom: 8px;
 }
 .feature-card__text {
   color: var(--stone-deep);
-  font-size: 15px;
+  font-size: 18px;
 }
 
 /* ─── STEPS GRID (How it works) ────────────────────────────── */
@@ -197,12 +197,12 @@
   margin-bottom: var(--space-sm);
 }
 .step-card__title {
-  font-size: 20px;
+  font-size: 24px;
   margin-bottom: 8px;
 }
 .step-card__text {
   color: var(--stone-deep);
-  font-size: 15px;
+  font-size: 18px;
 }
 
 /* ─── CLOSING CTA ─────────────────────────────────────────── */
@@ -236,12 +236,12 @@
 }
 .about-intro__text {
   color: var(--stone-deep);
-  font-size: 17px;
+  font-size: 21px;
   margin-bottom: var(--space-sm);
 }
 .about-intro__link {
   display: inline-block;
-  font-size: 16px;
+  font-size: 20px;
   font-weight: 500;
   color: var(--brass-dark);
   text-decoration: underline;
@@ -380,7 +380,7 @@
 
 /* ─── ABOUT PAGE ──────────────────────────────────────────── */
 .about-page {
-  padding-block: var(--space-xl);
+  padding-block: var(--space-sm);
 }
 .about-page__content {
   max-width: 700px;

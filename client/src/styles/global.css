@@ -43,6 +43,16 @@
   --footer-divider: #2E406A;
   --footer-copyright-bg: #0D1528;
 
+  /* Typography scale — component tokens */
+  /* Use these throughout all component CSS for consistency */
+  --text-xs:   13px;  /* fine print only */
+  --text-sm:   15px;  /* captions, badges, specs, helper text */
+  --text-base: 18px;  /* body (matches body font-size) */
+  --text-md:   16px;  /* labels, nav links, table cells, inputs */
+  --text-lg:   18px;  /* intro sentences, panel values */
+  --text-xl:   21px;  /* card prices, sub-headings */
+  --text-2xl:  24px;  /* card titles, section sub-headings */
+
   /* Typography */
   --font-heading: "Gloock", Georgia, "Times New Roman", serif;
   --font-body: "Hanken Grotesk", system-ui, -apple-system, "Segoe UI", sans-serif;

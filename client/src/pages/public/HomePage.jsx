@@ -222,7 +222,7 @@ export default function HomePage() {
             <div className="feature-card">
               <div className="feature-card__icon" aria-hidden="true">
                 {/* Clean geometric house icon — Brass colour, brand palette */}
-                <svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg" width="36" height="36">
+                <svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg" width="20" height="20">
                   <path d="M20 4L4 16.5V36a1 1 0 0 0 1 1h10V26h10v11h10a1 1 0 0 0 1-1V16.5L20 4Z" fill="currentColor"/>
                   <rect x="17" y="26" width="6" height="11" fill="var(--brass)" rx="1"/>
                 </svg>
