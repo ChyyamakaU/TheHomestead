@@ -60,14 +60,16 @@ app.get('/api/health', (req, res) => {
 // ---------------------------------------------------------------------------
 // API routes
 // ---------------------------------------------------------------------------
-const authRoutes = require('./routes/auth');
+const authRoutes      = require('./routes/auth');
+const apartmentRoutes = require('./routes/apartments');
+const imageRoutes     = require('./routes/images');
 
-app.use('/api/auth', authRoutes);
+app.use('/api/auth',                        authRoutes);
+app.use('/api/apartments',                  apartmentRoutes);
+// Image routes are nested under apartments so :id is the apartment id
+app.use('/api/apartments/:id/images',       imageRoutes);
 
 // Additional route files will be mounted here as they are created.
-// Example:
-//   const apartmentRoutes = require('./routes/apartments');
-//   app.use('/api/apartments', apartmentRoutes);
 // ---------------------------------------------------------------------------
 
 // ---------------------------------------------------------------------------
@@ -88,6 +90,34 @@ app.use((req, res) => {
 // Having one central place for error responses keeps them consistent.
 // ---------------------------------------------------------------------------
 app.use((err, req, res, next) => { // eslint-disable-line no-unused-vars
+  // Handle multer-specific errors (file upload validation)
+  // These are user-facing errors and should never show a stack trace.
+  if (err.code === 'LIMIT_FILE_SIZE') {
+    return res.status(400).json({
+      status: 'error',
+      message: 'File too large. Maximum file size is 5MB.',
+    });
+  }
+  if (err.code === 'LIMIT_FILE_COUNT') {
+    return res.status(400).json({
+      status: 'error',
+      message: 'Too many files. Maximum 10 images per upload.',
+    });
+  }
+  if (err.code === 'LIMIT_UNEXPECTED_FILE') {
+    return res.status(400).json({
+      status: 'error',
+      message: 'Unexpected field name in file upload. Use "images" as the field name.',
+    });
+  }
+  // multer fileFilter rejection (invalid file type)
+  if (err.message && err.message.includes('Invalid file type')) {
+    return res.status(400).json({
+      status: 'error',
+      message: err.message,
+    });
+  }
+
   const statusCode = err.statusCode || 500;
   const message = err.message || 'Internal server error';
 

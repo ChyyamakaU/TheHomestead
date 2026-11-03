@@ -1,9 +1,48 @@
 'use strict';
 
-const { DataTypes } = require('sequelize');
+const { DataTypes, Op } = require('sequelize');
 const slugify = require('slugify');
 const { sequelize } = require('../config/database');
 
+// ---------------------------------------------------------------------------
+// generateUniqueSlug
+// Defined BEFORE the model so it is available when hooks reference it.
+// Builds a URL-friendly slug from the title. If the slug already exists
+// in the DB, appends a counter suffix until it is unique.
+// ---------------------------------------------------------------------------
+const generateUniqueSlug = async (title, excludeId = null) => {
+  const baseSlug = slugify(title, {
+    lower: true,
+    strict: true, // strips special characters
+    trim: true,
+  });
+
+  let slug = baseSlug;
+  let counter = 1;
+
+  // Use a lazy require here to avoid the circular-import problem that occurs
+  // when the module tries to access Apartment before it is fully exported.
+  // By the time generateUniqueSlug is *called* (at runtime, not at load time),
+  // the Apartment model is already fully initialised and registered.
+  const ApartmentModel = require('./Apartment');
+
+  while (true) {
+    const where = { slug };
+    if (excludeId) {
+      where.id = { [Op.ne]: excludeId };
+    }
+    const existing = await ApartmentModel.findOne({ where });
+    if (!existing) break;
+    slug = `${baseSlug}-${counter}`;
+    counter++;
+  }
+
+  return slug;
+};
+
+// ---------------------------------------------------------------------------
+// Apartment model
+// ---------------------------------------------------------------------------
 const Apartment = sequelize.define(
   'Apartment',
   {
@@ -112,56 +151,18 @@ const Apartment = sequelize.define(
     underscored: true,
     timestamps: true,
     hooks: {
-      // Auto-generate the slug from the title before creating a record.
-      // If a slug collision occurs (two apartments with the same title),
-      // a timestamp suffix is appended to keep it unique.
-      beforeCreate: async (apartment) => {
-        apartment.slug = await generateUniqueSlug(apartment.title);
-      },
-      // Regenerate the slug if the title changes on update.
-      beforeUpdate: async (apartment) => {
-        if (apartment.changed('title')) {
-          apartment.slug = await generateUniqueSlug(apartment.title, apartment.id);
+      // beforeValidate fires BEFORE Sequelize checks allowNull constraints,
+      // so the slug is set before the null check on the slug column runs.
+      beforeValidate: async (apartment) => {
+        if (!apartment.slug || apartment.changed('title')) {
+          apartment.slug = await generateUniqueSlug(
+            apartment.title,
+            apartment.isNewRecord ? null : apartment.id
+          );
         }
       },
     },
   }
 );
-
-/**
- * Generates a unique URL-friendly slug from a title.
- * If the base slug already exists in the database (for a different record),
- * appends a numeric suffix until unique: "title-1", "title-2", etc.
- *
- * @param {string} title - The apartment title
- * @param {number|null} excludeId - The current apartment's id (for updates, to exclude self)
- */
-const generateUniqueSlug = async (title, excludeId = null) => {
-  const { Op } = require('sequelize');
-
-  const baseSlug = slugify(title, {
-    lower: true,
-    strict: true,   // removes special characters
-    trim: true,
-  });
-
-  let slug = baseSlug;
-  let counter = 1;
-
-  while (true) {
-    const whereClause = { slug };
-    if (excludeId) {
-      whereClause.id = { [Op.ne]: excludeId };
-    }
-
-    const existing = await Apartment.findOne({ where: whereClause });
-    if (!existing) break;
-
-    slug = `${baseSlug}-${counter}`;
-    counter++;
-  }
-
-  return slug;
-};
 
 module.exports = Apartment;
