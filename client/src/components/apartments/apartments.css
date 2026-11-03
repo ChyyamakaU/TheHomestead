@@ -1,0 +1,219 @@
+/* ============================================================
+   APARTMENT COMPONENTS — Cards, Gallery, Amenities
+   ============================================================ */
+
+/* ─── APARTMENT CARD ──────────────────────────────────────── */
+.apartment-card {
+  background-color: var(--white);
+  border: 1px solid var(--stone-light);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  transition: box-shadow var(--transition), transform var(--transition);
+}
+
+.apartment-card:hover {
+  box-shadow: 0 4px 20px rgba(20, 33, 61, 0.1);
+  transform: translateY(-2px);
+}
+
+.apartment-card__link {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  color: inherit;
+}
+
+.apartment-card__image-wrap {
+  position: relative;
+  aspect-ratio: 4 / 3;
+  overflow: hidden;
+  background-color: var(--greige);
+}
+
+.apartment-card__image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.apartment-card__placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  color: var(--stone-dark);
+  font-size: 14px;
+  background-color: var(--greige);
+}
+
+.apartment-card__badge {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+}
+
+.apartment-card__body {
+  padding: var(--space-sm) var(--space-sm) var(--space-sm);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  flex: 1;
+}
+
+.apartment-card__title {
+  font-size: 21px;
+  line-height: 1.2;
+}
+
+.apartment-card__location {
+  font-size: 14px;
+  color: var(--stone-deep);
+}
+
+.apartment-card__specs {
+  display: flex;
+  gap: var(--space-xs);
+  flex-wrap: wrap;
+}
+
+.apartment-card__spec {
+  font-size: 13px;
+  color: var(--stone-deep);
+  padding: 4px 10px;
+  background-color: var(--mist);
+  border-radius: var(--radius-sm);
+}
+
+.apartment-card__amenities {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  margin-top: 4px;
+}
+
+.apartment-card__amenity {
+  font-size: 13px;
+  color: var(--stone-deep);
+}
+
+.apartment-card__amenity:not(:last-child)::after {
+  content: '·';
+  margin-left: 6px;
+  color: var(--stone);
+}
+
+.apartment-card__amenity--more {
+  color: var(--stone-dark);
+  font-weight: 500;
+}
+
+.apartment-card__footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: auto;
+  padding-top: var(--space-xs);
+  border-top: 1px solid var(--stone-light);
+}
+
+.apartment-card__price {
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--midnight);
+}
+
+.apartment-card__cta {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--brass-dark);
+  transition: color var(--transition);
+}
+
+.apartment-card:hover .apartment-card__cta {
+  color: var(--brass-dark);
+  text-decoration: underline;
+}
+
+/* ─── IMAGE GALLERY ───────────────────────────────────────── */
+.image-gallery {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+}
+
+.image-gallery__main {
+  aspect-ratio: 16 / 10;
+  overflow: hidden;
+  border-radius: var(--radius-img);
+  background-color: var(--greige);
+}
+
+.image-gallery__main-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.image-gallery__placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  color: var(--stone-dark);
+  font-size: 16px;
+  background-color: var(--greige);
+}
+
+.image-gallery__thumbs {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.image-gallery__thumb {
+  width: 80px;
+  height: 60px;
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  border: 2px solid transparent;
+  transition: border-color var(--transition);
+  padding: 0;
+  background: none;
+  cursor: pointer;
+}
+
+.image-gallery__thumb--active {
+  border-color: var(--brass);
+}
+
+.image-gallery__thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* ─── AMENITY LIST ─────────────────────────────────────────── */
+.amenity-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: var(--space-xs) var(--space-md);
+}
+
+.amenity-list__item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 15px;
+  color: var(--midnight);
+}
+
+.amenity-list__check {
+  color: var(--brass-dark);
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.amenity-list--empty {
+  color: var(--stone-dark);
+  font-size: 15px;
+}

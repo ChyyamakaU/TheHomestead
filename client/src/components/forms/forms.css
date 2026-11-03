@@ -1,0 +1,133 @@
+/* ============================================================
+   FORM STYLES — Enquiry forms (viewing requests, applications)
+   Per brand brief section 11: simple, professional, easy to complete
+   ============================================================ */
+
+.enquiry-form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+}
+
+.enquiry-form__field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.enquiry-form__row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-sm);
+}
+
+.enquiry-form__label {
+  font-family: var(--font-body);
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--midnight);
+}
+
+.enquiry-form__input {
+  height: 44px;
+  padding: 0 14px;
+  font-family: var(--font-body);
+  font-size: 15px;
+  color: var(--midnight);
+  background-color: var(--white);
+  border: 1px solid var(--stone);
+  border-radius: var(--radius-md);
+  transition: border-color var(--transition);
+}
+
+.enquiry-form__input::placeholder {
+  color: var(--stone-dark);
+}
+
+.enquiry-form__input:focus {
+  border-color: var(--midnight);
+  outline: 3px solid var(--brass);
+  outline-offset: 2px;
+}
+
+.enquiry-form__textarea {
+  height: auto;
+  padding: 12px 14px;
+  resize: vertical;
+  min-height: 80px;
+}
+
+.enquiry-form__errors {
+  margin-top: 8px;
+  padding-left: 20px;
+  list-style: disc;
+}
+
+.enquiry-form__submit {
+  margin-top: var(--space-xs);
+  width: 100%;
+}
+
+/* ─── ENQUIRY PANEL (detail page sidebar) ─────────────────── */
+.enquiry-panel {
+  background-color: var(--white);
+  border: 1px solid var(--stone-light);
+  border-radius: var(--radius-lg);
+  padding: var(--space-md);
+  box-shadow: var(--shadow-card);
+}
+
+.enquiry-panel__price {
+  font-size: 28px;
+  font-weight: 600;
+  color: var(--midnight);
+  margin-bottom: 4px;
+}
+
+.enquiry-panel__period {
+  font-size: 14px;
+  color: var(--stone-deep);
+  margin-bottom: var(--space-sm);
+}
+
+.enquiry-panel__divider {
+  height: 1px;
+  background-color: var(--stone-light);
+  margin: var(--space-sm) 0;
+}
+
+.enquiry-panel__detail {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 0;
+  font-size: 15px;
+}
+
+.enquiry-panel__detail-label {
+  color: var(--stone-deep);
+}
+
+.enquiry-panel__detail-value {
+  color: var(--midnight);
+  font-weight: 500;
+}
+
+.enquiry-panel__actions {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+  margin-top: var(--space-sm);
+}
+
+/* ─── FORM MODAL ──────────────────────────────────────────── */
+.enquiry-modal {
+  max-width: 560px;
+}
+
+/* ─── Responsive ───────────────────────────────────────────── */
+@media (max-width: 640px) {
+  .enquiry-form__row {
+    grid-template-columns: 1fr;
+  }
+}
