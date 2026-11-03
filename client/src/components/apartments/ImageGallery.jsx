@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { cn } from '../../utils/cn';
+import { getImageUrl } from '../../utils/format';
 
 /**
  * ImageGallery — displays apartment photographs with a main image
@@ -66,5 +67,3 @@ export default function ImageGallery({ images = [] }) {
     </div>
   );
 }
-
-import { getImageUrl } from '../../utils/format';

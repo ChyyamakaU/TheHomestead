@@ -6,6 +6,7 @@ import StatusBadge from '../../components/ui/StatusBadge';
 import Spinner from '../../components/ui/Spinner';
 import Button from '../../components/ui/Button';
 import Modal from '../../components/ui/Modal';
+import EmptyState from '../../components/ui/EmptyState';
 import ViewingRequestForm from '../../components/forms/ViewingRequestForm';
 import ApplicationForm from '../../components/forms/ApplicationForm';
 import { getPublicApartmentBySlug } from '../../api/public';
@@ -197,5 +198,3 @@ export default function ApartmentDetailPage() {
     </div>
   );
 }
-
-import EmptyState from '../../components/ui/EmptyState';

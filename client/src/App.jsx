@@ -32,6 +32,8 @@ import './components/layout/admin.css';
 import './components/apartments/apartments.css';
 import './components/search/search.css';
 import './components/forms/forms.css';
+import './styles/pages.css';
+import './styles/admin.css';
 
 export default function App() {
   return (
