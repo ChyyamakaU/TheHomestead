@@ -1,0 +1,355 @@
+/* ============================================================
+   UI COMPONENT STYLES
+   Buttons, badges, alerts, spinners, modals, pagination,
+   empty states, page loaders
+   ============================================================ */
+
+/* ─── BUTTONS ────────────────────────────────────────────── */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-xs);
+  font-family: var(--font-body);
+  font-weight: 600;
+  font-size: 15px;
+  line-height: 1;
+  border-radius: var(--radius-md);
+  padding: 0 24px;
+  height: 46px;
+  transition: background-color var(--transition), border-color var(--transition),
+    color var(--transition), opacity var(--transition);
+  white-space: nowrap;
+}
+
+.btn--sm {
+  height: 36px;
+  font-size: 14px;
+  padding: 0 16px;
+}
+
+.btn--lg {
+  height: 52px;
+  font-size: 16px;
+  padding: 0 32px;
+}
+
+/* Primary — Midnight background, Mist text, hover #1F2F52 */
+.btn--primary {
+  background-color: var(--midnight);
+  color: var(--mist);
+}
+.btn--primary:hover:not(:disabled) {
+  background-color: var(--midnight-800);
+}
+
+/* Brass CTA — Brass background, Midnight text, hover #B8913F */
+.btn--brass {
+  background-color: var(--brass);
+  color: var(--midnight);
+}
+.btn--brass:hover:not(:disabled) {
+  background-color: #B8913F;
+}
+
+/* Secondary — transparent, Stone border, Midnight text, hover greige */
+.btn--secondary {
+  background-color: transparent;
+  border: 1.5px solid var(--stone);
+  color: var(--midnight);
+}
+.btn--secondary:hover:not(:disabled) {
+  background-color: var(--greige);
+}
+
+/* Danger — Error red for destructive actions */
+.btn--danger {
+  background-color: var(--error);
+  color: var(--white);
+}
+.btn--danger:hover:not(:disabled) {
+  background-color: #9E3434;
+}
+
+/* Ghost — no background or border */
+.btn--ghost {
+  background-color: transparent;
+  color: var(--midnight);
+  padding: 0 12px;
+}
+.btn--ghost:hover:not(:disabled) {
+  background-color: var(--mist);
+}
+
+/* Disabled — Stone Light bg, Stone Dark text */
+.btn:disabled {
+  background-color: var(--stone-light);
+  color: var(--stone-dark);
+  cursor: not-allowed;
+  opacity: 0.8;
+}
+
+/* Loading spinner inside button */
+.btn__spinner {
+  width: 16px;
+  height: 16px;
+  border: 2px solid currentColor;
+  border-top-color: transparent;
+  border-radius: 50%;
+  animation: btn-spin 0.6s linear infinite;
+}
+@keyframes btn-spin {
+  to { transform: rotate(360deg); }
+}
+
+/* ─── BADGES ─────────────────────────────────────────────── */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  font-family: var(--font-body);
+  font-size: 13px;
+  font-weight: 600;
+  padding: 4px 12px;
+  border-radius: 100px;
+  line-height: 1.4;
+  white-space: nowrap;
+}
+
+.badge--success {
+  background-color: rgba(46, 125, 82, 0.12);
+  color: var(--success);
+}
+.badge--warning {
+  background-color: rgba(201, 138, 27, 0.12);
+  color: var(--warning);
+}
+.badge--error {
+  background-color: rgba(178, 59, 59, 0.12);
+  color: var(--error);
+}
+.badge--new {
+  background-color: var(--midnight);
+  color: var(--brass-light);
+}
+.badge--neutral {
+  background-color: var(--stone-light);
+  color: var(--stone-deep);
+}
+.badge--draft {
+  background-color: var(--stone-light);
+  color: var(--stone-dark);
+}
+.badge--completed {
+  background-color: var(--midnight);
+  color: var(--mist);
+}
+
+/* ─── ALERTS ──────────────────────────────────────────────── */
+.alert {
+  padding: var(--space-sm) var(--space-md);
+  border-radius: var(--radius-md);
+  font-size: 15px;
+  line-height: 1.5;
+  border: 1px solid transparent;
+}
+.alert--success {
+  background-color: rgba(46, 125, 82, 0.08);
+  border-color: rgba(46, 125, 82, 0.3);
+  color: var(--success);
+}
+.alert--error {
+  background-color: rgba(178, 59, 59, 0.08);
+  border-color: rgba(178, 59, 59, 0.3);
+  color: var(--error);
+}
+.alert--warning {
+  background-color: rgba(201, 138, 27, 0.08);
+  border-color: rgba(201, 138, 27, 0.3);
+  color: var(--warning);
+}
+.alert--info {
+  background-color: rgba(20, 33, 61, 0.06);
+  border-color: rgba(20, 33, 61, 0.2);
+  color: var(--midnight);
+}
+
+/* ─── SPINNER ─────────────────────────────────────────────── */
+.spinner {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+.spinner__inner {
+  width: 100%;
+  height: 100%;
+  border: 3px solid var(--stone-light);
+  border-top-color: var(--midnight);
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+}
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* ─── PAGE LOADER ─────────────────────────────────────────── */
+.page-loader {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 60vh;
+}
+
+/* ─── MODAL ───────────────────────────────────────────────── */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(20, 33, 61, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: var(--space-md);
+  animation: fade-in 0.15s ease;
+}
+@keyframes fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+.modal {
+  background-color: var(--white);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-dropdown);
+  width: 100%;
+  max-width: 480px;
+  max-height: 90vh;
+  overflow-y: auto;
+  animation: slide-up 0.2s ease;
+}
+@keyframes slide-up {
+  from { transform: translateY(16px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+.modal--sm { max-width: 360px; }
+.modal--md { max-width: 480px; }
+.modal--lg { max-width: 640px; }
+.modal__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-md) var(--space-md) 0;
+}
+.modal__title {
+  font-size: 20px;
+}
+.modal__close {
+  font-size: 20px;
+  color: var(--stone-dark);
+  padding: var(--space-xs);
+  border-radius: var(--radius-sm);
+  transition: background-color var(--transition), color var(--transition);
+}
+.modal__close:hover {
+  background-color: var(--mist);
+  color: var(--midnight);
+}
+.modal__body {
+  padding: var(--space-md);
+}
+
+/* ─── PAGINATION ──────────────────────────────────────────── */
+.pagination {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-xs);
+  flex-wrap: wrap;
+}
+.pagination__btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 38px;
+  height: 38px;
+  padding: 0 10px;
+  font-family: var(--font-body);
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--midnight);
+  background-color: var(--white);
+  border: 1px solid var(--stone-light);
+  border-radius: var(--radius-sm);
+  transition: all var(--transition);
+}
+.pagination__btn:hover:not(:disabled) {
+  border-color: var(--midnight);
+  background-color: var(--mist-light);
+}
+.pagination__btn--active {
+  background-color: var(--midnight);
+  color: var(--mist);
+  border-color: var(--midnight);
+}
+.pagination__btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+.pagination__ellipsis {
+  padding: 0 4px;
+  color: var(--stone-dark);
+}
+
+/* ─── EMPTY STATE ─────────────────────────────────────────── */
+.empty-state {
+  text-align: center;
+  padding: var(--space-xl) var(--space-md);
+}
+.empty-state__icon {
+  font-size: 48px;
+  margin-bottom: var(--space-sm);
+  opacity: 0.4;
+}
+.empty-state__title {
+  font-size: 24px;
+  margin-bottom: var(--space-xs);
+}
+.empty-state__message {
+  color: var(--stone-deep);
+  font-size: 16px;
+  max-width: 400px;
+  margin: 0 auto var(--space-md);
+}
+.empty-state__action {
+  display: flex;
+  justify-content: center;
+}
+
+/* ─── LOGO ────────────────────────────────────────────────── */
+.logo {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+}
+.logo__symbol {
+  width: 28px;
+  height: 28px;
+  flex-shrink: 0;
+}
+.logo--light .logo__symbol {
+  /* On midnight bg, the path is mist-coloured */
+}
+.logo--dark .logo__symbol {
+  /* On light bg, the path is midnight-coloured */
+}
+.logo__wordmark {
+  font-family: var(--font-heading);
+  font-size: 22px;
+  color: inherit;
+  line-height: 1;
+}
+.logo--symbol .logo__wordmark {
+  display: none;
+}
