@@ -8,6 +8,7 @@ const Amenity          = require('./Amenity');
 const ApartmentAmenity = require('./ApartmentAmenity');
 const ApartmentImage   = require('./ApartmentImage');
 const ViewingRequest   = require('./ViewingRequest');
+const Application      = require('./Application');
 
 // ---------------------------------------------------------------------------
 // Associations
@@ -42,14 +43,24 @@ ApartmentImage.belongsTo(Apartment, {
 });
 
 // Apartment -> ViewingRequest  (one-to-many, nullable FK)
-// An apartment can have many viewing requests.
-// apartment_id is nullable so requests survive apartment deletion (SET NULL).
 Apartment.hasMany(ViewingRequest, {
   foreignKey: 'apartment_id',
   as: 'viewingRequests',
   onDelete: 'SET NULL',
 });
 ViewingRequest.belongsTo(Apartment, {
+  foreignKey: 'apartment_id',
+  as: 'apartment',
+});
+
+// Apartment -> Application  (one-to-many, nullable FK)
+// apartment_id is nullable so applications survive apartment deletion (SET NULL).
+Apartment.hasMany(Application, {
+  foreignKey: 'apartment_id',
+  as: 'applications',
+  onDelete: 'SET NULL',
+});
+Application.belongsTo(Apartment, {
   foreignKey: 'apartment_id',
   as: 'apartment',
 });
@@ -65,6 +76,7 @@ const db = {
   ApartmentAmenity,
   ApartmentImage,
   ViewingRequest,
+  Application,
 };
 
 module.exports = db;

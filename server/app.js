@@ -65,6 +65,7 @@ const apartmentRoutes      = require('./routes/apartments');
 const imageRoutes          = require('./routes/images');
 const publicRoutes         = require('./routes/public');
 const viewingRequestRoutes = require('./routes/viewingRequests');
+const applicationRoutes    = require('./routes/applications');
 
 app.use('/api/auth',               authRoutes);
 app.use('/api/apartments',         apartmentRoutes);
@@ -73,6 +74,8 @@ app.use('/api/apartments/:id/images', imageRoutes);
 app.use('/api/public',             publicRoutes);
 // Viewing requests — public submit, admin management on same prefix
 app.use('/api/viewing-requests',   viewingRequestRoutes);
+// Rental applications — public submit, admin management on same prefix
+app.use('/api/applications',       applicationRoutes);
 
 // Additional route files will be mounted here as they are created.
 // ---------------------------------------------------------------------------
