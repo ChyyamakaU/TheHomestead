@@ -1,0 +1,113 @@
+/* ============================================================
+   FOOTER STYLES
+   Midnight background, mist text, #98A2BD links,
+   brass hover, #0D1528 copyright strip
+   ============================================================ */
+
+.footer {
+  background-color: var(--midnight);
+  color: var(--mist);
+}
+
+.footer__main {
+  padding-block: var(--space-xl);
+}
+
+.footer__inner {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1fr;
+  gap: var(--space-lg);
+}
+
+/* Brand section */
+.footer__brand {
+  max-width: 320px;
+}
+
+.footer__logo {
+  display: flex;
+  align-items: center;
+  color: var(--mist);
+  margin-bottom: var(--space-sm);
+}
+
+.footer__description {
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--footer-link);
+}
+
+/* Footer columns */
+.footer__heading {
+  font-family: var(--font-body);
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--mist);
+  margin-bottom: var(--space-sm);
+  letter-spacing: 0.02em;
+}
+
+.footer__links {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.footer__link {
+  font-family: var(--font-body);
+  font-size: 14px;
+  font-weight: 400;
+  color: var(--footer-link);
+  transition: color var(--transition);
+}
+
+.footer__link:hover {
+  color: var(--brass);
+}
+
+/* Contact column */
+.footer__contact-note {
+  font-size: 14px;
+  color: var(--footer-link);
+  margin-bottom: var(--space-xs);
+  font-style: italic;
+}
+
+/* Copyright strip */
+.footer__copyright {
+  background-color: var(--footer-copyright-bg);
+  padding-block: 20px;
+}
+
+.footer__copyright-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 13px;
+  color: var(--footer-link);
+}
+
+/* ─── Responsive ───────────────────────────────────────────── */
+@media (max-width: 900px) {
+  .footer__inner {
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-md);
+  }
+
+  .footer__brand {
+    grid-column: 1 / -1;
+    max-width: 100%;
+  }
+}
+
+@media (max-width: 640px) {
+  .footer__inner {
+    grid-template-columns: 1fr;
+  }
+
+  .footer__copyright-inner {
+    flex-direction: column;
+    gap: 8px;
+    text-align: center;
+  }
+}
