@@ -132,7 +132,7 @@ export default function HomePage() {
       </section>
 
       {/* ─── ABOUT INTRO ─────────────────────────────────── */}
-      <section className="section section--greige">
+      <section className="section section--mist-light">
         <div className="container about-intro">
           <div className="about-intro__content">
             <h2>About Homestead</h2>
@@ -220,7 +220,13 @@ export default function HomePage() {
           </div>
           <div className="feature-grid">
             <div className="feature-card">
-              <div className="feature-card__icon" aria-hidden="true"> home</div>
+              <div className="feature-card__icon" aria-hidden="true">
+                {/* Clean geometric house icon — Brass colour, brand palette */}
+                <svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg" width="36" height="36">
+                  <path d="M20 4L4 16.5V36a1 1 0 0 0 1 1h10V26h10v11h10a1 1 0 0 0 1-1V16.5L20 4Z" fill="currentColor"/>
+                  <rect x="17" y="26" width="6" height="11" fill="var(--brass)" rx="1"/>
+                </svg>
+              </div>
               <h3 className="feature-card__title">Easy apartment discovery</h3>
               <p className="feature-card__text">
                 Find apartments and explore available options in one place.
@@ -280,7 +286,7 @@ export default function HomePage() {
       </section>
 
       {/* ─── CLOSING CTA ─────────────────────────────────── */}
-      <section className="section section--midnight closing-cta">
+      <section className="section section--greige closing-cta">
         <div className="container closing-cta__inner">
           <h2 className="closing-cta__heading">Your next home could be right here.</h2>
           <p className="closing-cta__text">

@@ -23,16 +23,16 @@
 
 .enquiry-form__label {
   font-family: var(--font-body);
-  font-size: 14px;
+  font-size: 15px;
   font-weight: 500;
   color: var(--midnight);
 }
 
 .enquiry-form__input {
-  height: 44px;
+  height: 46px;
   padding: 0 14px;
   font-family: var(--font-body);
-  font-size: 15px;
+  font-size: 16px;
   color: var(--midnight);
   background-color: var(--white);
   border: 1px solid var(--stone);
@@ -78,14 +78,14 @@
 }
 
 .enquiry-panel__price {
-  font-size: 28px;
+  font-size: 30px;
   font-weight: 600;
   color: var(--midnight);
   margin-bottom: 4px;
 }
 
 .enquiry-panel__period {
-  font-size: 14px;
+  font-size: 15px;
   color: var(--stone-deep);
   margin-bottom: var(--space-sm);
 }
@@ -101,7 +101,7 @@
   justify-content: space-between;
   align-items: center;
   padding: 8px 0;
-  font-size: 15px;
+  font-size: 16px;
 }
 
 .enquiry-panel__detail-label {

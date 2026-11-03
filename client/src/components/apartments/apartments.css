@@ -61,12 +61,12 @@
 }
 
 .apartment-card__title {
-  font-size: 21px;
+  font-size: 22px;
   line-height: 1.2;
 }
 
 .apartment-card__location {
-  font-size: 14px;
+  font-size: 15px;
   color: var(--stone-deep);
 }
 
@@ -77,7 +77,7 @@
 }
 
 .apartment-card__spec {
-  font-size: 13px;
+  font-size: 14px;
   color: var(--stone-deep);
   padding: 4px 10px;
   background-color: var(--mist);
@@ -92,7 +92,7 @@
 }
 
 .apartment-card__amenity {
-  font-size: 13px;
+  font-size: 14px;
   color: var(--stone-deep);
 }
 
@@ -117,13 +117,13 @@
 }
 
 .apartment-card__price {
-  font-size: 20px;
+  font-size: 21px;
   font-weight: 600;
   color: var(--midnight);
 }
 
 .apartment-card__cta {
-  font-size: 14px;
+  font-size: 15px;
   font-weight: 600;
   color: var(--brass-dark);
   transition: color var(--transition);
@@ -203,7 +203,7 @@
   display: flex;
   align-items: center;
   gap: 8px;
-  font-size: 15px;
+  font-size: 16px;
   color: var(--midnight);
 }
 
@@ -216,4 +216,31 @@
 .amenity-list--empty {
   color: var(--stone-dark);
   font-size: 15px;
+}
+
+/* ─── Responsive ───────────────────────────────────────────── */
+@media (max-width: 768px) {
+  .apartment-card__body {
+    padding: var(--space-sm);
+  }
+  .image-gallery__main {
+    aspect-ratio: 4 / 3;
+  }
+  .amenity-list {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (max-width: 480px) {
+  .apartment-card__footer {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 6px;
+  }
+  .amenity-list {
+    grid-template-columns: 1fr;
+  }
+  .image-gallery__thumbs {
+    gap: 6px;
+  }
 }

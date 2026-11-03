@@ -304,7 +304,7 @@ export default function AdminApartmentsPage() {
       {loading ? (
         <div className="page-loader"><Spinner size={40} /></div>
       ) : apartments.length > 0 ? (
-        <table className="admin-table">
+        <div className="admin-table-wrap"><table className="admin-table">
           <thead>
             <tr>
               <th>Apartment</th>
@@ -354,6 +354,7 @@ export default function AdminApartmentsPage() {
             ))}
           </tbody>
         </table>
+        </div>
       ) : (
         <EmptyState
           title="No apartments yet"

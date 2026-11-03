@@ -89,11 +89,12 @@
 html {
   scroll-behavior: smooth;
   -webkit-text-size-adjust: 100%;
+  overflow-x: hidden; /* prevent horizontal scroll at root */
 }
 
 body {
   font-family: var(--font-body);
-  font-size: 17px;
+  font-size: 18px;
   line-height: 1.65;
   color: var(--midnight);
   background-color: var(--mist);
@@ -167,51 +168,54 @@ h6 {
 }
 
 /* Desktop type scale */
-h1 { font-size: 48px; }
-h2 { font-size: 36px; }
-h3 { font-size: 24px; }
-h4 { font-size: 18px; }
+h1 { font-size: 50px; }
+h2 { font-size: 38px; }
+h3 { font-size: 26px; }
+h4 { font-size: 19px; }
 
 .hero-heading {
   font-family: var(--font-heading);
   font-weight: 400;
-  font-size: clamp(40px, 7vw, 68px);
+  /* Reduced max so the tagline fits on one line on desktop (≥769px).
+     clamp: 36px floor → 5.5vw fluid → 56px ceiling */
+  font-size: clamp(36px, 5.5vw, 56px);
   line-height: 1.08;
   color: var(--midnight);
 }
 
 .text-intro {
-  font-size: 20px;
+  font-size: 21px;
   line-height: 1.6;
   color: var(--stone-deep);
 }
 
 .text-small {
-  font-size: 14px;
+  font-size: 15px;
   line-height: 1.5;
 }
 
 .text-caption {
-  font-size: 14px;
+  font-size: 15px;
   color: var(--stone-dark);
 }
 
 .price-text {
   font-family: var(--font-body);
-  font-size: 22px;
+  font-size: 23px;
   font-weight: 600;
   color: var(--midnight);
 }
 
 /* Mobile typography */
 @media (max-width: 640px) {
-  h1 { font-size: 34px; }
-  h2 { font-size: 28px; }
-  h3 { font-size: 21px; }
-  body { font-size: 16px; }
-  .text-intro { font-size: 17px; }
-  .text-small, .text-caption { font-size: 13px; }
-  .price-text { font-size: 20px; }
+  h1 { font-size: 36px; }
+  h2 { font-size: 29px; }
+  h3 { font-size: 22px; }
+  body { font-size: 17px; }
+  .text-intro { font-size: 18px; }
+  .text-small { font-size: 14px; }
+  .text-caption { font-size: 14px; }
+  .price-text { font-size: 21px; }
 }
 
 /* ------------------------------------------------------------

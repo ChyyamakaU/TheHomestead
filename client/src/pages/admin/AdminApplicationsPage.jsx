@@ -123,7 +123,7 @@ export default function AdminApplicationsPage() {
         <div className="page-loader"><Spinner size={40} /></div>
       ) : applications.length > 0 ? (
         <>
-          <table className="admin-table">
+          <div className="admin-table-wrap"><table className="admin-table">
             <thead>
               <tr>
                 <th>Name</th>
@@ -154,6 +154,7 @@ export default function AdminApplicationsPage() {
               ))}
             </tbody>
           </table>
+          </div>
           {pagination && pagination.totalPages > 1 && (
             <div style={{ marginTop: 'var(--space-lg)' }}>
               <Pagination pagination={pagination} onPageChange={setPage} />

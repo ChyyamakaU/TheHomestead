@@ -98,7 +98,7 @@ export default function AdminDashboardPage() {
             </Link>
           </div>
           {recentViewing.length > 0 ? (
-            <table className="admin-table">
+            <div className="admin-table-wrap"><table className="admin-table">
               <thead>
                 <tr>
                   <th>Name</th>
@@ -117,7 +117,7 @@ export default function AdminDashboardPage() {
                   </tr>
                 ))}
               </tbody>
-            </table>
+            </table></div>
           ) : (
             <p className="dashboard-section__empty">No viewing requests yet.</p>
           )}
@@ -131,7 +131,7 @@ export default function AdminDashboardPage() {
             </Link>
           </div>
           {recentApps.length > 0 ? (
-            <table className="admin-table">
+            <div className="admin-table-wrap"><table className="admin-table">
               <thead>
                 <tr>
                   <th>Name</th>
@@ -150,7 +150,7 @@ export default function AdminDashboardPage() {
                   </tr>
                 ))}
               </tbody>
-            </table>
+            </table></div>
           ) : (
             <p className="dashboard-section__empty">No applications yet.</p>
           )}
