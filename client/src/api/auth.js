@@ -1,24 +1,28 @@
 import apiClient from './client';
 
 /**
- * Authenticate an admin user and set the HTTP-only JWT cookie.
+ * Register a new tenant account.
+ * @param {object} data - { first_name, last_name, email, phone, password, confirm_password, agree_terms }
+ */
+export const register = (data) =>
+  apiClient.post('/auth/register', data).then((r) => r.data);
+
+/**
+ * Authenticate a user (any role).
  * @param {object} credentials - { email, password }
- * @returns {Promise<object>} { user }
  */
 export const login = (credentials) =>
   apiClient.post('/auth/login', credentials).then((r) => r.data);
 
 /**
- * Log out the current user by clearing the auth cookie.
- * @returns {Promise<object>}
+ * Log out the current user.
  */
 export const logout = () =>
   apiClient.post('/auth/logout').then((r) => r.data);
 
 /**
  * Fetch the currently authenticated user's details.
- * Called on app load to restore session state from the HTTP-only cookie.
- * @returns {Promise<object>} { user }
+ * Called on app load to restore session from the HTTP-only cookie.
  */
 export const getMe = () =>
   apiClient.get('/auth/me').then((r) => r.data);

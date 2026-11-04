@@ -720,3 +720,104 @@
     font-size: 48px;
   }
 }
+
+/* ─── AUTH PAGES (register, login) ───────────────────────── */
+.auth-page {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--mist);
+  padding: var(--space-md);
+}
+.auth-card {
+  background-color: var(--white);
+  border: 1px solid var(--stone-light);
+  border-radius: var(--radius-lg);
+  padding: var(--space-lg);
+  width: 100%;
+  max-width: 480px;
+  box-shadow: var(--shadow-card);
+}
+.auth-card__header {
+  text-align: center;
+  margin-bottom: var(--space-md);
+}
+.auth-card__logo {
+  display: flex;
+  justify-content: center;
+  margin-bottom: var(--space-sm);
+}
+.auth-card__title {
+  font-size: 28px;
+  margin-bottom: 6px;
+}
+.auth-card__sub {
+  font-size: var(--text-sm);
+  color: var(--stone-deep);
+}
+.auth-card__link {
+  color: var(--brass-dark);
+  text-decoration: underline;
+  font-weight: 500;
+  transition: color var(--transition);
+}
+.auth-card__link:hover { color: var(--brass); }
+.auth-card__link--small { font-size: var(--text-sm); }
+.auth-card__errors {
+  margin-top: 6px;
+  padding-left: 18px;
+  list-style: disc;
+}
+.auth-card__errors li { margin-bottom: 4px; }
+.auth-card__footer-note {
+  text-align: center;
+  font-size: var(--text-sm);
+  color: var(--stone-dark);
+  margin-top: var(--space-sm);
+}
+
+.auth-form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+  margin-top: var(--space-sm);
+}
+.auth-form__row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-sm);
+}
+.auth-form__hint {
+  font-size: var(--text-xs);
+  color: var(--stone-dark);
+  margin-top: 4px;
+}
+.auth-form__forgot {
+  text-align: right;
+  margin-top: -8px;
+}
+.auth-form__checkbox {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  font-size: var(--text-sm);
+  color: var(--midnight);
+  cursor: pointer;
+}
+.auth-form__checkbox input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  margin-top: 2px;
+  flex-shrink: 0;
+  accent-color: var(--midnight);
+}
+.auth-form__submit {
+  margin-top: var(--space-xs);
+  width: 100%;
+}
+
+@media (max-width: 480px) {
+  .auth-form__row { grid-template-columns: 1fr; }
+  .auth-card { padding: var(--space-md); }
+}

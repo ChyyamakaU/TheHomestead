@@ -67,14 +67,26 @@ const publicRoutes         = require('./routes/public');
 const viewingRequestRoutes = require('./routes/viewingRequests');
 const applicationRoutes    = require('./routes/applications');
 
-app.use('/api/auth',               authRoutes);
+// Rate limiter for authentication endpoints
+// Prevents brute-force attacks on login and register.
+// 10 attempts per IP per 15 minutes.
+const rateLimit = require('express-rate-limit');
+const authLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 10,
+  message: {
+    status: 'error',
+    message: 'Too many attempts from this IP address. Please try again in 15 minutes.',
+  },
+  standardHeaders: true,
+  legacyHeaders: false,
+});
+
+app.use('/api/auth',               authLimiter, authRoutes);
 app.use('/api/apartments',         apartmentRoutes);
 app.use('/api/apartments/:id/images', imageRoutes);
-// Public routes — no authentication required
 app.use('/api/public',             publicRoutes);
-// Viewing requests — public submit, admin management on same prefix
 app.use('/api/viewing-requests',   viewingRequestRoutes);
-// Rental applications — public submit, admin management on same prefix
 app.use('/api/applications',       applicationRoutes);
 
 // Additional route files will be mounted here as they are created.
