@@ -14,7 +14,11 @@ const ViewingRequest = sequelize.define(
     },
     apartment_id: {
       type: DataTypes.INTEGER,
-      allowNull: true, // nullable so SET NULL works when an apartment is deleted
+      allowNull: true,
+    },
+    user_id: {
+      type: DataTypes.INTEGER,
+      allowNull: true, // nullable — existing anonymous requests preserved
     },
     // Title snapshot — preserves apartment identity even after deletion
     apartment_title: {

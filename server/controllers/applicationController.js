@@ -88,10 +88,24 @@ const submitApplication = async (req, res, next) => {
       });
     }
 
+    // --- Prevent duplicate applications (authenticated users only) ---
+    if (req.user) {
+      const existing = await Application.findOne({
+        where: { user_id: req.user.id, apartment_id: apartment.id },
+      });
+      if (existing) {
+        return res.status(409).json({
+          status: 'error',
+          message: 'You have already submitted an application for this apartment.',
+        });
+      }
+    }
+
     // --- Create the application ---
     const application = await Application.create({
       apartment_id:          apartment.id,
       apartment_title:       apartment.title,
+      user_id:               req.user ? req.user.id : null, // attach if authenticated
       full_name:             full_name.trim(),
       email:                 email.trim().toLowerCase(),
       phone:                 phone.trim(),
@@ -317,4 +331,68 @@ module.exports = {
   getApplicationById,
   updateApplication,
   deleteApplication,
+  getMyApplications,
+  getMyApplicationById,
 };
+
+// ---------------------------------------------------------------------------
+// GET /api/applications/my
+// Tenant only — returns the authenticated user's own applications.
+// ---------------------------------------------------------------------------
+async function getMyApplications(req, res, next) {
+  try {
+    const applications = await Application.findAll({
+      where: { user_id: req.user.id },
+      include: [
+        {
+          model: Apartment,
+          as: 'apartment',
+          attributes: ['id', 'title', 'city', 'state', 'slug', 'availability'],
+          required: false,
+          include: [
+            {
+              model: require('../models').ApartmentImage,
+              as: 'images',
+              attributes: ['url', 'is_primary'],
+              limit: 1,
+              order: [['is_primary', 'DESC']],
+            },
+          ],
+        },
+      ],
+      order: [['created_at', 'DESC']],
+    });
+
+    return res.status(200).json({ status: 'success', applications });
+  } catch (error) {
+    next(error);
+  }
+}
+
+// ---------------------------------------------------------------------------
+// GET /api/applications/my/:id
+// Tenant only — single application detail. Ensures ownership.
+// ---------------------------------------------------------------------------
+async function getMyApplicationById(req, res, next) {
+  try {
+    const application = await Application.findOne({
+      where: { id: req.params.id, user_id: req.user.id },
+      include: [
+        {
+          model: Apartment,
+          as: 'apartment',
+          attributes: ['id', 'title', 'city', 'state', 'slug', 'price', 'payment_period', 'availability'],
+          required: false,
+        },
+      ],
+    });
+
+    if (!application) {
+      return res.status(404).json({ status: 'error', message: 'Application not found.' });
+    }
+
+    return res.status(200).json({ status: 'success', application });
+  } catch (error) {
+    next(error);
+  }
+}

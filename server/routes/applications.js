@@ -10,35 +10,30 @@ const {
   getApplicationById,
   updateApplication,
   deleteApplication,
+  getMyApplications,
+  getMyApplicationById,
 } = require('../controllers/applicationController');
 
-const { verifyToken, requireAdmin } = require('../middleware/auth');
+const { verifyToken, requireAdmin, requireTenant, optionalAuth } = require('../middleware/auth');
 
 // ---------------------------------------------------------------------------
-// Public route — no authentication required
-// POST /api/applications
-// Visitors submit a rental application for a published apartment.
+// Tenant: own records — must be defined BEFORE admin /:id routes
 // ---------------------------------------------------------------------------
-router.post('/', submitApplication);
+router.get('/my',     verifyToken, requireTenant, getMyApplications);
+router.get('/my/:id', verifyToken, requireTenant, getMyApplicationById);
 
 // ---------------------------------------------------------------------------
-// Admin routes — all protected by verifyToken + requireAdmin
+// Public submit — optionalAuth attaches user_id if logged in
 // ---------------------------------------------------------------------------
+router.post('/', optionalAuth, submitApplication);
 
-// GET /api/applications/stats
-// Defined BEFORE /:id to prevent "stats" being matched as an ID parameter.
+// ---------------------------------------------------------------------------
+// Admin routes
+// ---------------------------------------------------------------------------
 router.get('/stats',  verifyToken, requireAdmin, getApplicationStats);
-
-// GET /api/applications              — paginated list with optional filters
 router.get('/',       verifyToken, requireAdmin, getAllApplications);
-
-// GET /api/applications/:id          — single application detail
 router.get('/:id',    verifyToken, requireAdmin, getApplicationById);
-
-// PATCH /api/applications/:id        — update status and/or admin notes
 router.patch('/:id',  verifyToken, requireAdmin, updateApplication);
-
-// DELETE /api/applications/:id       — remove an application
 router.delete('/:id', verifyToken, requireAdmin, deleteApplication);
 
 module.exports = router;

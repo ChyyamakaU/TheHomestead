@@ -16,6 +16,10 @@ const Application = sequelize.define(
       type: DataTypes.INTEGER,
       allowNull: true,
     },
+    user_id: {
+      type: DataTypes.INTEGER,
+      allowNull: true, // nullable — existing anonymous applications preserved
+    },
     apartment_title: {
       type: DataTypes.STRING(255),
       allowNull: false,

@@ -30,6 +30,7 @@ import AdminApplicationsPage from './pages/admin/AdminApplicationsPage';
 // Tenant dashboard pages
 import DashboardLayout from './pages/dashboard/DashboardLayout';
 import DashboardOverviewPage from './pages/dashboard/DashboardOverviewPage';
+import DashboardProfilePage from './pages/dashboard/DashboardProfilePage';
 
 // Styles
 import './components/ui/ui.css';
@@ -93,7 +94,8 @@ export default function App() {
             }
           >
             <Route index element={<DashboardOverviewPage />} />
-            {/* Phases 4–9 will add: applications, viewings, saved, payments, profile */}
+            <Route path="profile" element={<DashboardProfilePage />} />
+            {/* Phases 4–9 will add: applications, viewings, saved, payments */}
           </Route>
 
           {/* ── 404 ──────────────────────────────────────────── */}
