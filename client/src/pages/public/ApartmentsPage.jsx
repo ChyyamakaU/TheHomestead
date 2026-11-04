@@ -7,6 +7,7 @@ import Pagination from '../../components/ui/Pagination';
 import Spinner from '../../components/ui/Spinner';
 import EmptyState from '../../components/ui/EmptyState';
 import { getPublicApartments, getFilterOptions } from '../../api/public';
+import { useSavedApartments } from '../../hooks/useSavedApartments';
 
 /**
  * ApartmentsPage — searchable, filterable apartment listings.
@@ -23,6 +24,7 @@ export default function ApartmentsPage() {
   const [options, setOptions] = useState({});
   const [loading, setLoading] = useState(true);
   const [searchValue, setSearchValue] = useState('');
+  const { isSaved, toggle } = useSavedApartments();
 
   // Initialize filters from URL search params
   useEffect(() => {
@@ -141,7 +143,12 @@ export default function ApartmentsPage() {
             <>
               <div className="apartment-grid">
                 {apartments.map((apt) => (
-                  <ApartmentCard key={apt.id} apartment={apt} />
+                  <ApartmentCard
+                    key={apt.id}
+                    apartment={apt}
+                    isSaved={isSaved(apt.id)}
+                    onToggle={toggle}
+                  />
                 ))}
               </div>
               {pagination && pagination.totalPages > 1 && (

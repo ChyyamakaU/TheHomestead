@@ -10,6 +10,8 @@ const ApartmentImage = require('./ApartmentImage');
 const ViewingRequest = require('./ViewingRequest');
 const Application    = require('./Application');
 const SavedApartment = require('./SavedApartment');
+const PaymentConfig  = require('./PaymentConfig');
+const Payment        = require('./Payment');
 
 // ---------------------------------------------------------------------------
 // Associations
@@ -104,6 +106,20 @@ SavedApartment.belongsTo(Apartment, { foreignKey: 'apartment_id', as: 'apartment
 User.hasMany(SavedApartment,        { foreignKey: 'user_id',      as: 'savedApartmentRecords' });
 
 // ---------------------------------------------------------------------------
+// Payment associations
+// ---------------------------------------------------------------------------
+User.hasMany(Payment, { foreignKey: 'user_id', as: 'payments', onDelete: 'RESTRICT' });
+Payment.belongsTo(User, { foreignKey: 'user_id', as: 'user' });
+Apartment.hasMany(Payment, { foreignKey: 'apartment_id', as: 'payments', onDelete: 'SET NULL' });
+Payment.belongsTo(Apartment, { foreignKey: 'apartment_id', as: 'apartment' });
+Application.hasMany(Payment, { foreignKey: 'application_id', as: 'payments', onDelete: 'SET NULL' });
+Payment.belongsTo(Application, { foreignKey: 'application_id', as: 'application' });
+PaymentConfig.hasMany(Payment, { foreignKey: 'payment_config_id', as: 'payments', onDelete: 'SET NULL' });
+Payment.belongsTo(PaymentConfig, { foreignKey: 'payment_config_id', as: 'paymentConfig' });
+User.hasMany(PaymentConfig, { foreignKey: 'created_by', as: 'createdConfigs' });
+PaymentConfig.belongsTo(User, { foreignKey: 'created_by', as: 'creator' });
+
+// ---------------------------------------------------------------------------
 const db = {
   sequelize,
   User,
@@ -114,6 +130,8 @@ const db = {
   ViewingRequest,
   Application,
   SavedApartment,
+  PaymentConfig,
+  Payment,
 };
 
 module.exports = db;

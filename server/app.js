@@ -93,6 +93,11 @@ app.use('/api/public',             publicRoutes);
 app.use('/api/viewing-requests',   viewingRequestRoutes);
 app.use('/api/applications',       applicationRoutes);
 
+const paymentConfigRoutes = require('./routes/paymentConfigs');
+const paymentRoutes       = require('./routes/payments');
+app.use('/api/payment-configs', paymentConfigRoutes);
+app.use('/api/payments',        paymentRoutes);
+
 // Additional route files will be mounted here as they are created.
 // ---------------------------------------------------------------------------
 

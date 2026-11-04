@@ -26,6 +26,8 @@ import AdminDashboardPage from './pages/admin/AdminDashboardPage';
 import AdminApartmentsPage from './pages/admin/AdminApartmentsPage';
 import AdminViewingRequestsPage from './pages/admin/AdminViewingRequestsPage';
 import AdminApplicationsPage from './pages/admin/AdminApplicationsPage';
+import AdminPaymentConfigsPage from './pages/admin/AdminPaymentConfigsPage';
+import AdminPaymentsPage from './pages/admin/AdminPaymentsPage';
 
 // Tenant dashboard pages
 import DashboardLayout from './pages/dashboard/DashboardLayout';
@@ -33,6 +35,7 @@ import DashboardOverviewPage from './pages/dashboard/DashboardOverviewPage';
 import DashboardApplicationsPage from './pages/dashboard/DashboardApplicationsPage';
 import DashboardViewingsPage from './pages/dashboard/DashboardViewingsPage';
 import DashboardSavedPage from './pages/dashboard/DashboardSavedPage';
+import DashboardPaymentsPage from './pages/dashboard/DashboardPaymentsPage';
 import DashboardProfilePage from './pages/dashboard/DashboardProfilePage';
 
 // Styles
@@ -86,6 +89,8 @@ export default function App() {
             <Route path="apartments" element={<AdminApartmentsPage />} />
             <Route path="viewing-requests" element={<AdminViewingRequestsPage />} />
             <Route path="applications" element={<AdminApplicationsPage />} />
+            <Route path="payment-configs" element={<AdminPaymentConfigsPage />} />
+            <Route path="payments" element={<AdminPaymentsPage />} />
           </Route>
 
           {/* ── Tenant dashboard (tenant only) ───────────────── */}
@@ -101,8 +106,8 @@ export default function App() {
             <Route path="applications" element={<DashboardApplicationsPage />} />
             <Route path="viewings" element={<DashboardViewingsPage />} />
             <Route path="saved" element={<DashboardSavedPage />} />
+            <Route path="payments" element={<DashboardPaymentsPage />} />
             <Route path="profile" element={<DashboardProfilePage />} />
-            {/* Phases 8–9 will add: payments */}
           </Route>
 
           {/* ── 404 ──────────────────────────────────────────── */}

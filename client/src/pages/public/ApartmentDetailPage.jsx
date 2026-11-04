@@ -12,6 +12,8 @@ import ApplicationForm from '../../components/forms/ApplicationForm';
 import { getPublicApartmentBySlug } from '../../api/public';
 import { formatPrice, formatLocation } from '../../utils/format';
 import { useAuth } from '../../context/AuthContext';
+import { useSavedApartments } from '../../hooks/useSavedApartments';
+import SaveButton from '../../components/ui/SaveButton';
 
 /**
  * ApartmentDetailPage — full apartment details with enquiry panel.
@@ -28,6 +30,7 @@ export default function ApartmentDetailPage() {
   const navigate = useNavigate();
   const location = useLocation();
   const { isAuthenticated } = useAuth();
+  const { isSaved, toggle } = useSavedApartments();
 
   const [apartment, setApartment] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -179,6 +182,26 @@ export default function ApartmentDetailPage() {
                   <span className="enquiry-panel__detail-value">{apartment.address}</span>
                 </div>
               )}
+
+              <div className="enquiry-panel__divider" />
+
+              {/* Save apartment */}
+              <SaveButton
+                apartmentId={apartment.id}
+                isSaved={isSaved(apartment.id)}
+                onToggle={toggle}
+                variant="panel"
+              />
+
+              <div className="enquiry-panel__divider" />
+
+              {/* Save apartment */}
+              <SaveButton
+                apartmentId={apartment.id}
+                isSaved={isSaved(apartment.id)}
+                onToggle={toggle}
+                variant="panel"
+              />
 
               <div className="enquiry-panel__divider" />
 

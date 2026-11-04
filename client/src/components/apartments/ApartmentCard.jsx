@@ -1,25 +1,25 @@
 import { Link } from 'react-router-dom';
 import StatusBadge from '../ui/StatusBadge';
+import SaveButton from '../ui/SaveButton';
 import {
   formatPrice,
   formatLocation,
   getPrimaryImage,
   getImageUrl,
-  truncate,
 } from '../../utils/format';
 
 /**
- * ApartmentCard — reusable listing card for public browsing.
+ * ApartmentCard — reusable listing card.
  *
- * Per brand brief section 6:
- * - White background, ~12px rounded corners, subtle border/shadow
- * - Shows: photograph, availability, title, location, price, payment period,
- *   bedrooms, bathrooms, size, a few amenities, "View apartment" link
- * - Desktop: 3 per row, Medium: 2, Mobile: 1
+ * Optional save button (Phase 5):
+ *   isSaved   — boolean, pass from useSavedApartments hook
+ *   onToggle  — function(id), pass from useSavedApartments hook
+ * If neither prop is provided the save button is hidden.
  */
-export default function ApartmentCard({ apartment }) {
+export default function ApartmentCard({ apartment, isSaved, onToggle }) {
   const imageUrl = getImageUrl(getPrimaryImage(apartment));
   const location = formatLocation(apartment);
+  const showSave = onToggle !== undefined;
 
   return (
     <article className="apartment-card">
@@ -41,6 +41,15 @@ export default function ApartmentCard({ apartment }) {
           <div className="apartment-card__badge">
             <StatusBadge status={apartment.availability} type="availability" />
           </div>
+          {/* Save button — overlaid top-right of image */}
+          {showSave && (
+            <SaveButton
+              apartmentId={apartment.id}
+              isSaved={!!isSaved}
+              onToggle={onToggle}
+              variant="card"
+            />
+          )}
         </div>
 
         {/* Content */}
@@ -49,20 +58,21 @@ export default function ApartmentCard({ apartment }) {
           <p className="apartment-card__location">{location}</p>
 
           <div className="apartment-card__specs">
-            <span className="apartment-card__spec">{apartment.bedrooms} bed{apartment.bedrooms !== 1 ? 's' : ''}</span>
-            <span className="apartment-card__spec">{apartment.bathrooms} bath{apartment.bathrooms !== 1 ? 's' : ''}</span>
+            <span className="apartment-card__spec">
+              {apartment.bedrooms} bed{apartment.bedrooms !== 1 ? 's' : ''}
+            </span>
+            <span className="apartment-card__spec">
+              {apartment.bathrooms} bath{apartment.bathrooms !== 1 ? 's' : ''}
+            </span>
             {apartment.size && (
               <span className="apartment-card__spec">{apartment.size} m²</span>
             )}
           </div>
 
-          {/* Amenities (first 3) */}
           {apartment.amenities?.length > 0 && (
             <div className="apartment-card__amenities">
               {apartment.amenities.slice(0, 3).map((a) => (
-                <span key={a.id} className="apartment-card__amenity">
-                  {a.name}
-                </span>
+                <span key={a.id} className="apartment-card__amenity">{a.name}</span>
               ))}
               {apartment.amenities.length > 3 && (
                 <span className="apartment-card__amenity apartment-card__amenity--more">

@@ -17,6 +17,8 @@ const ADMIN_NAV_ITEMS = [
   { label: 'Apartments', path: '/admin/apartments', icon: ' home' },
   { label: 'Viewing requests', path: '/admin/viewing-requests', icon: '◇' },
   { label: 'Applications', path: '/admin/applications', icon: '✎' },
+  { label: 'Payment configs', path: '/admin/payment-configs', icon: '⚙' },
+  { label: 'Payments', path: '/admin/payments', icon: '₦' },
 ];
 
 export default function AdminSidebar() {

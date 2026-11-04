@@ -354,3 +354,60 @@
 .logo--symbol .logo__wordmark {
   display: none;
 }
+
+/* ─── SAVE BUTTON ─────────────────────────────────────────── */
+.save-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  cursor: pointer;
+  border: none;
+  background: none;
+  transition: color var(--transition), transform var(--transition);
+  color: var(--stone-dark);
+}
+.save-btn:hover {
+  color: var(--error);
+  transform: scale(1.1);
+}
+.save-btn--saved {
+  color: var(--error);
+}
+
+/* Card variant — overlaid on apartment card image top-right */
+.save-btn--card {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  width: 36px;
+  height: 36px;
+  background-color: rgba(255, 255, 255, 0.92);
+  border-radius: 50%;
+  box-shadow: 0 1px 4px rgba(20, 33, 61, 0.15);
+  z-index: 2;
+}
+.save-btn--card:hover {
+  background-color: var(--white);
+  transform: scale(1.08);
+}
+
+/* Panel variant — inline button inside enquiry panel */
+.save-btn--panel {
+  font-family: var(--font-body);
+  font-size: var(--text-sm);
+  font-weight: 500;
+  padding: 8px 0;
+  color: var(--stone-deep);
+  border-bottom: 1px solid var(--stone-light);
+  width: 100%;
+  justify-content: center;
+  gap: 8px;
+}
+.save-btn--panel:hover {
+  color: var(--error);
+  transform: none;
+}
+.save-btn--panel.save-btn--saved {
+  color: var(--error);
+}
