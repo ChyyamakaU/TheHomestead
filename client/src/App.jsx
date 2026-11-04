@@ -1,9 +1,10 @@
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext';
 
 import PublicLayout from './components/layout/PublicLayout';
 import AdminLayout from './components/layout/AdminLayout';
 import ProtectedRoute from './components/ui/ProtectedRoute';
+import TenantRoute from './components/ui/TenantRoute';
 
 // Public pages
 import HomePage from './pages/public/HomePage';
@@ -16,6 +17,8 @@ import PrivacyPage from './pages/public/PrivacyPage';
 import TermsPage from './pages/public/TermsPage';
 import CookiePage from './pages/public/CookiePage';
 import NotFoundPage from './pages/public/NotFoundPage';
+import LoginPage from './pages/public/LoginPage';
+import RegisterPage from './pages/public/RegisterPage';
 
 // Admin pages
 import AdminLoginPage from './pages/admin/AdminLoginPage';
@@ -24,7 +27,11 @@ import AdminApartmentsPage from './pages/admin/AdminApartmentsPage';
 import AdminViewingRequestsPage from './pages/admin/AdminViewingRequestsPage';
 import AdminApplicationsPage from './pages/admin/AdminApplicationsPage';
 
-// Component styles
+// Tenant dashboard pages
+import DashboardLayout from './pages/dashboard/DashboardLayout';
+import DashboardOverviewPage from './pages/dashboard/DashboardOverviewPage';
+
+// Styles
 import './components/ui/ui.css';
 import './components/layout/navbar.css';
 import './components/layout/footer.css';
@@ -40,7 +47,7 @@ export default function App() {
     <AuthProvider>
       <BrowserRouter>
         <Routes>
-          {/* Public routes */}
+          {/* ── Public routes (with Navbar + Footer) ─────────── */}
           <Route element={<PublicLayout />}>
             <Route path="/" element={<HomePage />} />
             <Route path="/apartments" element={<ApartmentsPage />} />
@@ -53,10 +60,14 @@ export default function App() {
             <Route path="/cookies" element={<CookiePage />} />
           </Route>
 
-          {/* Admin login — no layout, separate from public site */}
+          {/* ── Auth pages (standalone centred layout) ────────── */}
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/register" element={<RegisterPage />} />
+
+          {/* ── Admin login ───────────────────────────────────── */}
           <Route path="/admin/login" element={<AdminLoginPage />} />
 
-          {/* Admin routes — protected */}
+          {/* ── Admin routes (admin/superadmin only) ─────────── */}
           <Route
             path="/admin"
             element={
@@ -65,13 +76,27 @@ export default function App() {
               </ProtectedRoute>
             }
           >
+            <Route index element={<Navigate to="dashboard" replace />} />
             <Route path="dashboard" element={<AdminDashboardPage />} />
             <Route path="apartments" element={<AdminApartmentsPage />} />
             <Route path="viewing-requests" element={<AdminViewingRequestsPage />} />
             <Route path="applications" element={<AdminApplicationsPage />} />
           </Route>
 
-          {/* 404 */}
+          {/* ── Tenant dashboard (tenant only) ───────────────── */}
+          <Route
+            path="/dashboard"
+            element={
+              <TenantRoute>
+                <DashboardLayout />
+              </TenantRoute>
+            }
+          >
+            <Route index element={<DashboardOverviewPage />} />
+            {/* Phases 4–9 will add: applications, viewings, saved, payments, profile */}
+          </Route>
+
+          {/* ── 404 ──────────────────────────────────────────── */}
           <Route path="*" element={<NotFoundPage />} />
         </Routes>
       </BrowserRouter>

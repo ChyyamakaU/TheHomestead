@@ -59,7 +59,7 @@ export default function Navbar() {
         <div className="navbar__actions">
           {!isAuthenticated && (
             <>
-              <Link to="/login" className="navbar__link">Sign in</Link>
+              <Link to="/login" className="navbar__btn-outline">Sign in</Link>
               <Link to="/register" className="navbar__cta">Create account</Link>
             </>
           )}

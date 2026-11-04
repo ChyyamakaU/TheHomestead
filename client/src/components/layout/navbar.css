@@ -95,6 +95,23 @@
   color: var(--brass);
 }
 
+/* Sign in — outlined button style */
+.navbar__btn-outline {
+  font-family: var(--font-body);
+  font-size: var(--text-md);
+  font-weight: 600;
+  color: var(--mist);
+  padding: 8px 20px;
+  border: 1.5px solid rgba(238, 242, 245, 0.5);
+  border-radius: var(--radius-md);
+  transition: border-color var(--transition), background-color var(--transition);
+  white-space: nowrap;
+}
+.navbar__btn-outline:hover {
+  border-color: var(--mist);
+  background-color: rgba(238, 242, 245, 0.08);
+}
+
 /* CTA button */
 .navbar__cta {
   font-family: var(--font-body);
