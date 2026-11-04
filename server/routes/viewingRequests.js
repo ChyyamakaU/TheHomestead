@@ -10,35 +10,30 @@ const {
   updateViewingRequest,
   deleteViewingRequest,
   getViewingRequestStats,
+  getMyViewingRequests,
+  getMyViewingRequestById,
 } = require('../controllers/viewingRequestController');
 
-const { verifyToken, requireAdmin } = require('../middleware/auth');
+const { verifyToken, requireAdmin, requireTenant, optionalAuth } = require('../middleware/auth');
 
 // ---------------------------------------------------------------------------
-// Public route — no authentication required
-// POST /api/viewing-requests
-// Visitors submit a viewing request for a published apartment.
+// Tenant: own records — defined BEFORE admin /:id routes
 // ---------------------------------------------------------------------------
-router.post('/', submitViewingRequest);
+router.get('/my',     verifyToken, requireTenant, getMyViewingRequests);
+router.get('/my/:id', verifyToken, requireTenant, getMyViewingRequestById);
 
 // ---------------------------------------------------------------------------
-// Admin routes — verifyToken + requireAdmin on every route
+// Public submit — optionalAuth attaches user_id if logged in
 // ---------------------------------------------------------------------------
+router.post('/', optionalAuth, submitViewingRequest);
 
-// GET /api/viewing-requests/stats
-// Must be defined BEFORE /:id to prevent "stats" being matched as an ID.
+// ---------------------------------------------------------------------------
+// Admin routes
+// ---------------------------------------------------------------------------
 router.get('/stats',  verifyToken, requireAdmin, getViewingRequestStats);
-
-// GET /api/viewing-requests              — paginated list with optional filters
 router.get('/',       verifyToken, requireAdmin, getAllViewingRequests);
-
-// GET /api/viewing-requests/:id          — single request detail
 router.get('/:id',    verifyToken, requireAdmin, getViewingRequestById);
-
-// PATCH /api/viewing-requests/:id        — update status and/or admin notes
 router.patch('/:id',  verifyToken, requireAdmin, updateViewingRequest);
-
-// DELETE /api/viewing-requests/:id       — remove a request
 router.delete('/:id', verifyToken, requireAdmin, deleteViewingRequest);
 
 module.exports = router;

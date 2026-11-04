@@ -1,6 +1,7 @@
 'use strict';
 
 const { User } = require('../models');
+const { Application, ViewingRequest, SavedApartment } = require('../models');
 const { isValidPhone } = require('../middleware/validate');
 
 // ---------------------------------------------------------------------------
@@ -135,4 +136,51 @@ const changePassword = async (req, res, next) => {
   }
 };
 
-module.exports = { getProfile, updateProfile, changePassword };
+module.exports = { getProfile, updateProfile, changePassword, getDashboardStats };
+
+// ---------------------------------------------------------------------------
+// GET /api/users/dashboard-stats
+// Returns summary counts for the tenant's dashboard overview.
+// ---------------------------------------------------------------------------
+async function getDashboardStats(req, res, next) {
+  try {
+    const userId = req.user.id;
+
+    const [
+      totalApplications,
+      pendingApplications,
+      approvedApplications,
+      totalViewings,
+      pendingViewings,
+      confirmedViewings,
+      savedCount,
+    ] = await Promise.all([
+      Application.count({ where: { user_id: userId } }),
+      Application.count({ where: { user_id: userId, status: 'pending' } }),
+      Application.count({ where: { user_id: userId, status: 'approved' } }),
+      ViewingRequest.count({ where: { user_id: userId } }),
+      ViewingRequest.count({ where: { user_id: userId, status: 'pending' } }),
+      ViewingRequest.count({ where: { user_id: userId, status: 'confirmed' } }),
+      SavedApartment.count({ where: { user_id: userId } }),
+    ]);
+
+    return res.status(200).json({
+      status: 'success',
+      stats: {
+        applications: {
+          total:    totalApplications,
+          pending:  pendingApplications,
+          approved: approvedApplications,
+        },
+        viewings: {
+          total:     totalViewings,
+          pending:   pendingViewings,
+          confirmed: confirmedViewings,
+        },
+        saved: savedCount,
+      },
+    });
+  } catch (error) {
+    next(error);
+  }
+}

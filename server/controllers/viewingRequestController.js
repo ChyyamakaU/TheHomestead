@@ -102,6 +102,7 @@ const submitViewingRequest = async (req, res, next) => {
     const viewingRequest = await ViewingRequest.create({
       apartment_id:    apartment.id,
       apartment_title: apartment.title, // snapshot
+      user_id:         req.user ? req.user.id : null, // attach if authenticated
       full_name:       full_name.trim(),
       email:           email.trim().toLowerCase(),
       phone:           phone.trim(),
@@ -333,4 +334,68 @@ module.exports = {
   updateViewingRequest,
   deleteViewingRequest,
   getViewingRequestStats,
+  getMyViewingRequests,
+  getMyViewingRequestById,
 };
+
+// ---------------------------------------------------------------------------
+// GET /api/viewing-requests/my
+// Tenant only — authenticated user's own viewing requests.
+// ---------------------------------------------------------------------------
+async function getMyViewingRequests(req, res, next) {
+  try {
+    const viewingRequests = await ViewingRequest.findAll({
+      where: { user_id: req.user.id },
+      include: [
+        {
+          model: Apartment,
+          as: 'apartment',
+          attributes: ['id', 'title', 'city', 'state', 'slug', 'availability'],
+          required: false,
+          include: [
+            {
+              model: require('../models').ApartmentImage,
+              as: 'images',
+              attributes: ['url', 'is_primary'],
+              limit: 1,
+              order: [['is_primary', 'DESC']],
+            },
+          ],
+        },
+      ],
+      order: [['created_at', 'DESC']],
+    });
+
+    return res.status(200).json({ status: 'success', viewingRequests });
+  } catch (error) {
+    next(error);
+  }
+}
+
+// ---------------------------------------------------------------------------
+// GET /api/viewing-requests/my/:id
+// Tenant only — single viewing request, ownership enforced.
+// ---------------------------------------------------------------------------
+async function getMyViewingRequestById(req, res, next) {
+  try {
+    const viewingRequest = await ViewingRequest.findOne({
+      where: { id: req.params.id, user_id: req.user.id },
+      include: [
+        {
+          model: Apartment,
+          as: 'apartment',
+          attributes: ['id', 'title', 'city', 'state', 'slug', 'price', 'payment_period', 'availability'],
+          required: false,
+        },
+      ],
+    });
+
+    if (!viewingRequest) {
+      return res.status(404).json({ status: 'error', message: 'Viewing request not found.' });
+    }
+
+    return res.status(200).json({ status: 'success', viewingRequest });
+  } catch (error) {
+    next(error);
+  }
+}

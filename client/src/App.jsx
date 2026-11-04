@@ -30,6 +30,9 @@ import AdminApplicationsPage from './pages/admin/AdminApplicationsPage';
 // Tenant dashboard pages
 import DashboardLayout from './pages/dashboard/DashboardLayout';
 import DashboardOverviewPage from './pages/dashboard/DashboardOverviewPage';
+import DashboardApplicationsPage from './pages/dashboard/DashboardApplicationsPage';
+import DashboardViewingsPage from './pages/dashboard/DashboardViewingsPage';
+import DashboardSavedPage from './pages/dashboard/DashboardSavedPage';
 import DashboardProfilePage from './pages/dashboard/DashboardProfilePage';
 
 // Styles
@@ -42,6 +45,7 @@ import './components/search/search.css';
 import './components/forms/forms.css';
 import './styles/pages.css';
 import './styles/admin.css';
+import './styles/dashboard.css';
 
 export default function App() {
   return (
@@ -94,8 +98,11 @@ export default function App() {
             }
           >
             <Route index element={<DashboardOverviewPage />} />
+            <Route path="applications" element={<DashboardApplicationsPage />} />
+            <Route path="viewings" element={<DashboardViewingsPage />} />
+            <Route path="saved" element={<DashboardSavedPage />} />
             <Route path="profile" element={<DashboardProfilePage />} />
-            {/* Phases 4–9 will add: applications, viewings, saved, payments */}
+            {/* Phases 8–9 will add: payments */}
           </Route>
 
           {/* ── 404 ──────────────────────────────────────────── */}

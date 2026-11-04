@@ -62,6 +62,7 @@ app.get('/api/health', (req, res) => {
 // ---------------------------------------------------------------------------
 const authRoutes           = require('./routes/auth');
 const userRoutes           = require('./routes/users');
+const favouritesRoutes     = require('./routes/favourites');
 const apartmentRoutes      = require('./routes/apartments');
 const imageRoutes          = require('./routes/images');
 const publicRoutes         = require('./routes/public');
@@ -85,6 +86,7 @@ const authLimiter = rateLimit({
 
 app.use('/api/auth',               authLimiter, authRoutes);
 app.use('/api/users',              userRoutes);
+app.use('/api/favourites',         favouritesRoutes);
 app.use('/api/apartments',         apartmentRoutes);
 app.use('/api/apartments/:id/images', imageRoutes);
 app.use('/api/public',             publicRoutes);
