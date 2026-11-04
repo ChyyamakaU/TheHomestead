@@ -148,13 +148,17 @@ export function getApiErrorMessage(error) {
 
 /**
  * Build the full image URL for a relative path returned by the API.
- * Prepends the backend base URL (without /api) for /uploads/ paths.
+ * In dev the Vite proxy serves /uploads/* from the backend directly,
+ * so we just return the path as-is for relative /uploads paths.
  * @param {string} url
  * @returns {string}
  */
 export function getImageUrl(url) {
   if (!url) return null;
   if (url.startsWith('http')) return url;
-  const base = import.meta.env.VITE_API_URL?.replace('/api', '') || 'http://localhost:5000';
+  // In production override with VITE_API_URL base if set
+  const base = import.meta.env.VITE_API_URL
+    ? import.meta.env.VITE_API_URL.replace('/api', '')
+    : '';
   return `${base}${url}`;
 }

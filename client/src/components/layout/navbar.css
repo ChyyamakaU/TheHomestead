@@ -10,6 +10,8 @@
   z-index: 900;
   background-color: var(--midnight);
   transition: box-shadow var(--transition);
+  padding-top: 10px;
+  padding-bottom: 10px;
 }
 
 .navbar--scrolled {
@@ -45,7 +47,7 @@
 
 .navbar__link {
   font-family: var(--font-body);
-  font-size: var(--text-md);
+  font-size: var(--text-xl);
   font-weight: 500;
   color: var(--mist);
   padding: 6px 0;

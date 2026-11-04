@@ -10,7 +10,9 @@ import axios from 'axios';
  * keeping the base URL and credentials config in a single place.
  */
 const apiClient = axios.create({
-  baseURL: import.meta.env.VITE_API_URL || 'http://localhost:5000/api',
+  // In development, Vite proxies /api/* to http://localhost:5000
+  // so we use a relative path. In production, set VITE_API_URL.
+  baseURL: import.meta.env.VITE_API_URL || '/api',
   withCredentials: true,
   headers: {
     'Content-Type': 'application/json',
