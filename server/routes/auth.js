@@ -3,34 +3,41 @@
 const express = require('express');
 const router = express.Router();
 
-const { login, logout, getMe } = require('../controllers/authController');
+const { register, login, logout, getMe } = require('../controllers/authController');
 const { verifyToken } = require('../middleware/auth');
-const { validateLogin } = require('../middleware/validate');
+const { validateLogin, validateRegister } = require('../middleware/validate');
 
 // ---------------------------------------------------------------------------
-// Auth routes — all mounted under /api/auth in app.js
+// POST /api/auth/register  — create a new tenant account
 // ---------------------------------------------------------------------------
+router.post('/register', validateRegister, register);
 
-/**
- * POST /api/auth/login
- * Public route — no token required.
- * validateLogin runs first to check input format.
- * If validation passes, the login controller handles credential checking.
- */
+// ---------------------------------------------------------------------------
+// POST /api/auth/login  — authenticate any user (tenant, admin, superadmin)
+// ---------------------------------------------------------------------------
 router.post('/login', validateLogin, login);
 
-/**
- * POST /api/auth/logout
- * Protected — must be logged in to log out.
- * verifyToken confirms the request comes from an authenticated session.
- */
+// ---------------------------------------------------------------------------
+// POST /api/auth/logout  — clear the auth cookie
+// ---------------------------------------------------------------------------
 router.post('/logout', verifyToken, logout);
 
-/**
- * GET /api/auth/me
- * Protected — returns the currently authenticated user's details.
- * The frontend calls this on page load to restore session state.
- */
+// ---------------------------------------------------------------------------
+// GET /api/auth/me  — return the authenticated user's details
+// ---------------------------------------------------------------------------
 router.get('/me', verifyToken, getMe);
+
+// ---------------------------------------------------------------------------
+// POST /api/auth/forgot-password
+// Architecture placeholder — not operational until an email service is
+// configured. Returns a clear message rather than pretending to send email.
+// ---------------------------------------------------------------------------
+router.post('/forgot-password', (req, res) => {
+  return res.status(503).json({
+    status: 'error',
+    message:
+      'Password reset by email is not yet available. Please contact support to reset your password.',
+  });
+});
 
 module.exports = router;

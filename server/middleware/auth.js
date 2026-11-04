@@ -5,16 +5,9 @@ const { User } = require('../models');
 
 /**
  * verifyToken
- *
- * Reads the JWT from the HTTP-only cookie named 'token'.
- * Verifies its signature and expiry using the JWT_SECRET.
- * If valid, attaches the decoded user payload to req.user
- * and calls next() to continue to the route handler.
- *
- * If the token is missing or invalid, responds with 401
- * and does NOT call next() — the request stops here.
- *
- * This middleware must run before requireAdmin.
+ * Reads the JWT from the HTTP-only 'token' cookie, verifies it,
+ * re-fetches the user from the database and attaches req.user.
+ * Works for ALL roles: superadmin, admin, tenant.
  */
 const verifyToken = async (req, res, next) => {
   try {
@@ -27,13 +20,7 @@ const verifyToken = async (req, res, next) => {
       });
     }
 
-    // Verify the token signature and decode the payload.
-    // jwt.verify throws if the token is expired or the signature is wrong.
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
-
-    // Re-fetch the user from the database on each request.
-    // This ensures that if an account is deactivated after a token is issued,
-    // the deactivated user cannot continue making requests using an old token.
     const user = await User.findByPk(decoded.id);
 
     if (!user) {
@@ -50,7 +37,6 @@ const verifyToken = async (req, res, next) => {
       });
     }
 
-    // Attach the safe user object to the request for downstream use.
     req.user = user.toSafeObject();
     next();
   } catch (error) {
@@ -71,17 +57,34 @@ const verifyToken = async (req, res, next) => {
 };
 
 /**
+ * optionalAuth
+ * Tries to verify the token but does NOT block unauthenticated requests.
+ * If a valid token is present, req.user is populated.
+ * If not, req.user stays undefined and the request continues.
+ * Used on routes that serve both authenticated and anonymous users.
+ */
+const optionalAuth = async (req, res, next) => {
+  try {
+    const token = req.cookies.token;
+    if (!token) return next();
+
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    const user = await User.findByPk(decoded.id);
+
+    if (user && user.is_active) {
+      req.user = user.toSafeObject();
+    }
+    next();
+  } catch {
+    // Invalid or expired token — treat as anonymous, don't error
+    next();
+  }
+};
+
+/**
  * requireAdmin
- *
- * Must be used AFTER verifyToken in the middleware chain.
- * Checks that the authenticated user's role is either
- * 'admin' or 'superadmin'. Responds with 403 if not.
- *
- * 401 = not authenticated (handled by verifyToken)
- * 403 = authenticated but not authorised (handled here)
- *
- * Usage on a route:
- *   router.get('/protected', verifyToken, requireAdmin, controller)
+ * Must be used after verifyToken.
+ * Allows only admin and superadmin roles.
  */
 const requireAdmin = (req, res, next) => {
   if (!req.user || !['admin', 'superadmin'].includes(req.user.role)) {
@@ -93,4 +96,35 @@ const requireAdmin = (req, res, next) => {
   next();
 };
 
-module.exports = { verifyToken, requireAdmin };
+/**
+ * requireTenant
+ * Must be used after verifyToken.
+ * Allows only the 'tenant' role. Admins use their own routes.
+ */
+const requireTenant = (req, res, next) => {
+  if (!req.user || req.user.role !== 'tenant') {
+    return res.status(403).json({
+      status: 'error',
+      message: 'Access denied. Tenant account required.',
+    });
+  }
+  next();
+};
+
+/**
+ * requireAuth
+ * Must be used after verifyToken.
+ * Allows any authenticated role (tenant, admin, superadmin).
+ * Use this when an endpoint should be accessible to all logged-in users.
+ */
+const requireAuth = (req, res, next) => {
+  if (!req.user) {
+    return res.status(401).json({
+      status: 'error',
+      message: 'Authentication required.',
+    });
+  }
+  next();
+};
+
+module.exports = { verifyToken, optionalAuth, requireAdmin, requireTenant, requireAuth };

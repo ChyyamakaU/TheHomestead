@@ -38,6 +38,10 @@ const User = sequelize.define(
         isEmail: { msg: 'Please provide a valid email address' },
       },
     },
+    phone: {
+      type: DataTypes.STRING(50),
+      allowNull: true,
+    },
     password: {
       type: DataTypes.STRING(255),
       allowNull: false,
@@ -46,13 +50,13 @@ const User = sequelize.define(
       },
     },
     role: {
-      type: DataTypes.ENUM('superadmin', 'admin'),
+      type: DataTypes.ENUM('superadmin', 'admin', 'tenant'),
       allowNull: false,
-      defaultValue: 'admin',
+      defaultValue: 'tenant',
       validate: {
         isIn: {
-          args: [['superadmin', 'admin']],
-          msg: 'Role must be superadmin or admin',
+          args: [['superadmin', 'admin', 'tenant']],
+          msg: 'Role must be superadmin, admin or tenant',
         },
       },
     },
@@ -64,21 +68,15 @@ const User = sequelize.define(
   },
   {
     tableName: 'users',
-    // Sequelize will map createdAt/updatedAt to the snake_case columns
-    // created_at/updated_at in the database.
     underscored: true,
     timestamps: true,
-
-    // Hooks run automatically at key lifecycle points.
     hooks: {
-      // Hash the password before creating a new user record.
       beforeCreate: async (user) => {
         if (user.password) {
           const salt = await bcrypt.genSalt(12);
           user.password = await bcrypt.hash(user.password, salt);
         }
       },
-      // Hash the password before updating if it has been changed.
       beforeUpdate: async (user) => {
         if (user.changed('password')) {
           const salt = await bcrypt.genSalt(12);
@@ -89,20 +87,13 @@ const User = sequelize.define(
   }
 );
 
-/**
- * Compares a plain-text password against the stored hash.
- * Called during login to verify credentials.
- * Defined as an instance method so it can be called as:
- *   user.comparePassword(plainText)
- */
 User.prototype.comparePassword = async function (plainPassword) {
   return bcrypt.compare(plainPassword, this.password);
 };
 
 /**
- * Returns a safe representation of the user — no password hash.
- * Used when sending user data back to the client so the hash
- * is never accidentally exposed in an API response.
+ * Returns a safe user object — no password hash.
+ * Includes phone for tenant profile use.
  */
 User.prototype.toSafeObject = function () {
   return {
@@ -110,6 +101,7 @@ User.prototype.toSafeObject = function () {
     first_name: this.first_name,
     last_name: this.last_name,
     email: this.email,
+    phone: this.phone || null,
     role: this.role,
     is_active: this.is_active,
     created_at: this.created_at,
