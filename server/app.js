@@ -84,6 +84,7 @@ const authLimiter = rateLimit({
 });
 
 app.use('/api/auth',               authLimiter, authRoutes);
+app.use('/api/users',              userRoutes);
 app.use('/api/apartments',         apartmentRoutes);
 app.use('/api/apartments/:id/images', imageRoutes);
 app.use('/api/public',             publicRoutes);

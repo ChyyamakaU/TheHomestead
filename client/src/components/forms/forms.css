@@ -120,6 +120,26 @@
   margin-top: var(--space-sm);
 }
 
+.enquiry-panel__auth-note {
+  text-align: center;
+  font-size: var(--text-sm);
+  margin-top: 4px;
+}
+.enquiry-panel__auth-note a {
+  color: var(--brass-dark);
+  text-decoration: underline;
+  font-weight: 500;
+}
+.enquiry-panel__auth-note a:hover { color: var(--brass); }
+
+.enquiry-panel__unavailable {
+  font-size: var(--text-sm);
+  color: var(--stone-deep);
+  text-align: center;
+  margin-top: var(--space-sm);
+  line-height: 1.5;
+}
+
 /* ─── FORM MODAL ──────────────────────────────────────────── */
 .enquiry-modal {
   max-width: 560px;

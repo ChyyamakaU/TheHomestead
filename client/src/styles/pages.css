@@ -932,3 +932,60 @@
   .dashboard-sidebar__nav { flex-direction: row; flex-wrap: wrap; }
   .dashboard-main { padding: var(--space-md); }
 }
+
+/* ─── DASHBOARD PROFILE PAGE ──────────────────────────────── */
+.profile-page {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-lg);
+}
+.profile-section {
+  background-color: var(--white);
+  border: 1px solid var(--stone-light);
+  border-radius: var(--radius-lg);
+  padding: var(--space-md);
+  box-shadow: var(--shadow-card);
+}
+.profile-section__title {
+  font-size: 22px;
+  margin-bottom: var(--space-md);
+  padding-bottom: var(--space-xs);
+  border-bottom: 1px solid var(--stone-light);
+}
+.profile-section__note {
+  font-size: var(--text-sm);
+  color: var(--stone-dark);
+  margin-top: var(--space-sm);
+}
+.profile-info-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: var(--space-sm);
+}
+.profile-info-item {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: var(--space-sm);
+  background-color: var(--mist-light);
+  border-radius: var(--radius-md);
+}
+.profile-info-item__label {
+  font-size: var(--text-xs);
+  font-weight: 600;
+  color: var(--stone-deep);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+.profile-info-item__value {
+  font-size: var(--text-md);
+  color: var(--midnight);
+  font-weight: 500;
+  word-break: break-all;
+}
+.profile-form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+  max-width: 540px;
+}

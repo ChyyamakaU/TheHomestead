@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import { useParams, Link, useNavigate, useLocation } from 'react-router-dom';
 import ImageGallery from '../../components/apartments/ImageGallery';
 import AmenityList from '../../components/apartments/AmenityList';
 import StatusBadge from '../../components/ui/StatusBadge';
@@ -10,23 +10,29 @@ import EmptyState from '../../components/ui/EmptyState';
 import ViewingRequestForm from '../../components/forms/ViewingRequestForm';
 import ApplicationForm from '../../components/forms/ApplicationForm';
 import { getPublicApartmentBySlug } from '../../api/public';
-import { formatPrice, formatLocation, getImageUrl } from '../../utils/format';
+import { formatPrice, formatLocation } from '../../utils/format';
+import { useAuth } from '../../context/AuthContext';
 
 /**
  * ApartmentDetailPage — full apartment details with enquiry panel.
  *
- * Per brand brief section 7:
- * - Two-column layout on desktop (main content + enquiry panel)
- * - Main: gallery, title, location, description, amenities, specs
- * - Sidebar: price, payment period, availability, apply + viewing buttons
- * - Mobile: stacked vertically
+ * Auth gating (Phase 3):
+ * - "Apply" and "Request a Viewing" check isAuthenticated before opening.
+ * - Unauthenticated visitors are redirected to /login with the current
+ *   page stored as location.state.from so they return here after login.
+ * - The intended action ('application' | 'viewing') is stored in
+ *   location.state.action so the modal opens automatically on return.
  */
 export default function ApartmentDetailPage() {
   const { slug } = useParams();
+  const navigate = useNavigate();
+  const location = useLocation();
+  const { isAuthenticated } = useAuth();
+
   const [apartment, setApartment] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [modalType, setModalType] = useState(null); // 'viewing' | 'application' | null
+  const [modalType, setModalType] = useState(null);
 
   useEffect(() => {
     setLoading(true);
@@ -38,6 +44,33 @@ export default function ApartmentDetailPage() {
       })
       .finally(() => setLoading(false));
   }, [slug]);
+
+  // After a successful login redirect back to this page, open the intended modal
+  useEffect(() => {
+    if (apartment && location.state?.action) {
+      setModalType(location.state.action);
+      // Clear the action from state so it doesn't re-trigger on re-renders
+      navigate(location.pathname, { replace: true, state: {} });
+    }
+  }, [apartment, location.state?.action]);
+
+  /**
+   * handleEnquiryClick — called when the user clicks Apply or Request Viewing.
+   * If authenticated, opens the modal directly.
+   * If not, redirects to /login with return destination + intended action stored.
+   */
+  const handleEnquiryClick = (type) => {
+    if (isAuthenticated) {
+      setModalType(type);
+    } else {
+      navigate('/login', {
+        state: {
+          from: location,           // full location so we return to this page
+          action: type,             // 'application' | 'viewing'
+        },
+      });
+    }
+  };
 
   if (loading) {
     return (
@@ -71,7 +104,7 @@ export default function ApartmentDetailPage() {
     );
   }
 
-  const location = formatLocation(apartment);
+  const aptLocation = formatLocation(apartment);
   const isAvailable = apartment.availability === 'available';
 
   return (
@@ -82,15 +115,13 @@ export default function ApartmentDetailPage() {
         </Link>
 
         <h1 className="apartment-detail__title">{apartment.title}</h1>
-        <p className="apartment-detail__location">{location}</p>
+        <p className="apartment-detail__location">{aptLocation}</p>
 
         <div className="apartment-detail__layout">
           {/* Main content */}
           <div className="apartment-detail__main">
-            {/* Image gallery */}
             <ImageGallery images={apartment.images} />
 
-            {/* Specs */}
             <div className="apartment-detail__section">
               <h3>Property details</h3>
               <div className="apartment-detail__specs">
@@ -111,7 +142,6 @@ export default function ApartmentDetailPage() {
               </div>
             </div>
 
-            {/* Description */}
             {apartment.description && (
               <div className="apartment-detail__section">
                 <h3>About this apartment</h3>
@@ -119,7 +149,6 @@ export default function ApartmentDetailPage() {
               </div>
             )}
 
-            {/* Amenities */}
             {apartment.amenities?.length > 0 && (
               <div className="apartment-detail__section">
                 <h3>Amenities and facilities</h3>
@@ -128,13 +157,14 @@ export default function ApartmentDetailPage() {
             )}
           </div>
 
-          {/* Enquiry panel (sidebar) */}
+          {/* Enquiry panel */}
           <aside className="apartment-detail__sidebar">
             <div className="enquiry-panel">
               <div className="enquiry-panel__price">
                 {formatPrice(apartment.price, apartment.payment_period)}
               </div>
               <div className="enquiry-panel__divider" />
+
               <div className="enquiry-panel__detail">
                 <span className="enquiry-panel__detail-label">Availability</span>
                 <StatusBadge status={apartment.availability} type="availability" />
@@ -149,26 +179,29 @@ export default function ApartmentDetailPage() {
                   <span className="enquiry-panel__detail-value">{apartment.address}</span>
                 </div>
               )}
+
               <div className="enquiry-panel__divider" />
-              <div className="enquiry-panel__actions">
-                <Button
-                  variant="brass"
-                  onClick={() => setModalType('application')}
-                  disabled={!isAvailable}
-                >
-                  Apply for this apartment
-                </Button>
-                <Button
-                  variant="secondary"
-                  onClick={() => setModalType('viewing')}
-                  disabled={!isAvailable}
-                >
-                  Request a viewing
-                </Button>
-              </div>
-              {!isAvailable && (
-                <p className="text-small" style={{ marginTop: '8px', color: 'var(--stone-deep)', textAlign: 'center' }}>
-                  This apartment is currently {apartment.availability === 'occupied' ? 'rented' : 'unavailable'}.
+
+              {isAvailable ? (
+                <div className="enquiry-panel__actions">
+                  <Button variant="brass" onClick={() => handleEnquiryClick('application')}>
+                    {isAuthenticated ? 'Apply for this apartment' : 'Sign in to apply'}
+                  </Button>
+                  <Button variant="secondary" onClick={() => handleEnquiryClick('viewing')}>
+                    {isAuthenticated ? 'Request a viewing' : 'Sign in to request a viewing'}
+                  </Button>
+                  {!isAuthenticated && (
+                    <p className="enquiry-panel__auth-note">
+                      <Link to="/register" state={{ from: location }}>
+                        New here? Create a free account
+                      </Link>
+                    </p>
+                  )}
+                </div>
+              ) : (
+                <p className="enquiry-panel__unavailable">
+                  This apartment is currently{' '}
+                  {apartment.availability === 'occupied' ? 'rented' : 'unavailable'}.
                   Enquiries are temporarily disabled.
                 </p>
               )}
@@ -177,7 +210,7 @@ export default function ApartmentDetailPage() {
         </div>
       </div>
 
-      {/* Modals for forms */}
+      {/* Modals — only render when apartment is loaded */}
       <Modal
         open={modalType === 'viewing'}
         onClose={() => setModalType(null)}
