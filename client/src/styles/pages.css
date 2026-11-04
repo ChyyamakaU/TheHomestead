@@ -821,3 +821,114 @@
   .auth-form__row { grid-template-columns: 1fr; }
   .auth-card { padding: var(--space-md); }
 }
+
+/* ─── TENANT DASHBOARD LAYOUT ─────────────────────────────── */
+.dashboard-layout {
+  display: flex;
+  min-height: 100vh;
+  background-color: var(--mist);
+}
+.dashboard-main {
+  flex: 1;
+  padding: var(--space-lg);
+  overflow-x: hidden;
+}
+
+/* Sidebar */
+.dashboard-sidebar {
+  background-color: var(--midnight);
+  width: 260px;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  z-index: 800;
+}
+.dashboard-sidebar__header {
+  padding: 20px 24px;
+  border-bottom: 1px solid var(--footer-divider);
+}
+.dashboard-sidebar__logo {
+  display: flex;
+  align-items: center;
+  color: var(--mist);
+}
+.dashboard-sidebar__user {
+  padding: 16px 24px;
+  border-bottom: 1px solid var(--footer-divider);
+}
+.dashboard-sidebar__name {
+  font-size: var(--text-sm);
+  font-weight: 600;
+  color: var(--mist);
+}
+.dashboard-sidebar__email {
+  font-size: var(--text-xs);
+  color: var(--footer-link);
+  margin-top: 2px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.dashboard-sidebar__nav {
+  flex: 1;
+  padding: var(--space-sm) 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.dashboard-sidebar__link {
+  display: flex;
+  align-items: center;
+  font-family: var(--font-body);
+  font-size: var(--text-sm);
+  font-weight: 500;
+  color: var(--footer-link);
+  padding: 10px 16px;
+  border-radius: var(--radius-sm);
+  transition: background-color var(--transition), color var(--transition);
+  text-decoration: none;
+  cursor: pointer;
+  border: none;
+  background: none;
+  width: 100%;
+  text-align: left;
+}
+.dashboard-sidebar__link:hover {
+  background-color: var(--footer-divider);
+  color: var(--mist);
+}
+.dashboard-sidebar__link--active {
+  background-color: var(--footer-divider);
+  color: var(--brass);
+}
+.dashboard-sidebar__footer {
+  padding: var(--space-sm) 12px;
+  border-top: 1px solid var(--footer-divider);
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.dashboard-sidebar__link--logout:hover { color: #E57373; }
+.dashboard-coming-soon {
+  background-color: var(--white);
+  border: 1px solid var(--stone-light);
+  border-radius: var(--radius-lg);
+  padding: var(--space-lg);
+  text-align: center;
+  color: var(--stone-deep);
+  font-size: var(--text-md);
+}
+
+@media (max-width: 768px) {
+  .dashboard-layout { flex-direction: column; }
+  .dashboard-sidebar {
+    position: relative;
+    width: 100%;
+    height: auto;
+  }
+  .dashboard-sidebar__nav { flex-direction: row; flex-wrap: wrap; }
+  .dashboard-main { padding: var(--space-md); }
+}

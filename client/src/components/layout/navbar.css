@@ -65,6 +65,36 @@
   border-bottom-color: var(--brass);
 }
 
+/* Desktop right-side actions — replaces single CTA with auth-aware group */
+.navbar__actions {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+}
+
+.navbar__username {
+  font-family: var(--font-body);
+  font-size: var(--text-sm);
+  color: var(--footer-link);
+  font-weight: 500;
+}
+
+/* Button-styled navbar link (logout) */
+.navbar__link--btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  font-family: var(--font-body);
+  font-size: var(--text-md);
+  font-weight: 500;
+  color: var(--mist);
+  transition: color var(--transition);
+}
+.navbar__link--btn:hover {
+  color: var(--brass);
+}
+
 /* CTA button */
 .navbar__cta {
   font-family: var(--font-body);
@@ -156,7 +186,8 @@
   }
 
   .navbar__links,
-  .navbar__cta {
+  .navbar__cta,
+  .navbar__actions {
     display: none;
   }
 
