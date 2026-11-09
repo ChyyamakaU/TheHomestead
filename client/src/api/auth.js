@@ -26,3 +26,11 @@ export const logout = () =>
  */
 export const getMe = () =>
   apiClient.get('/auth/me').then((r) => r.data);
+
+/**
+ * Exchange a Supabase access token for a Homestead JWT cookie.
+ * Called by /auth/callback after Google OAuth completes.
+ * @param {string} accessToken — Supabase session access_token
+ */
+export const googleCallback = (accessToken) =>
+  apiClient.post('/auth/google/callback', { access_token: accessToken }).then((r) => r.data);

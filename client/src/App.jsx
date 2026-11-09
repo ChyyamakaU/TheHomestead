@@ -19,6 +19,7 @@ import CookiePage from './pages/public/CookiePage';
 import NotFoundPage from './pages/public/NotFoundPage';
 import LoginPage from './pages/public/LoginPage';
 import RegisterPage from './pages/public/RegisterPage';
+import AuthCallbackPage from './pages/public/AuthCallbackPage';
 
 // Admin pages
 import AdminLoginPage from './pages/admin/AdminLoginPage';
@@ -72,6 +73,7 @@ export default function App() {
           {/* ── Auth pages (standalone centred layout) ────────── */}
           <Route path="/login" element={<LoginPage />} />
           <Route path="/register" element={<RegisterPage />} />
+          <Route path="/auth/callback" element={<AuthCallbackPage />} />
 
           {/* ── Admin login ───────────────────────────────────── */}
           <Route path="/admin/login" element={<AdminLoginPage />} />

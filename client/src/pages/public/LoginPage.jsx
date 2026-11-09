@@ -4,6 +4,7 @@ import { useAuth } from '../../context/AuthContext';
 import Logo from '../../components/ui/Logo';
 import Button from '../../components/ui/Button';
 import Alert from '../../components/ui/Alert';
+import GoogleSignInButton from '../../components/ui/GoogleSignInButton';
 import { getApiErrorMessage } from '../../utils/format';
 
 /**
@@ -111,6 +112,9 @@ export default function LoginPage() {
           <Link to="/terms" className="auth-card__link">Terms</Link> and{' '}
           <Link to="/privacy" className="auth-card__link">Privacy Policy</Link>.
         </p>
+
+        <div className="auth-divider">or</div>
+        <GoogleSignInButton label="Sign in with Google" />
       </div>
     </div>
   );

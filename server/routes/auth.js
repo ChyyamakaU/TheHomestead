@@ -3,7 +3,7 @@
 const express = require('express');
 const router = express.Router();
 
-const { register, login, logout, getMe } = require('../controllers/authController');
+const { register, login, logout, getMe, googleCallback } = require('../controllers/authController');
 const { verifyToken } = require('../middleware/auth');
 const { validateLogin, validateRegister } = require('../middleware/validate');
 
@@ -26,6 +26,13 @@ router.post('/logout', verifyToken, logout);
 // GET /api/auth/me  — return the authenticated user's details
 // ---------------------------------------------------------------------------
 router.get('/me', verifyToken, getMe);
+
+// ---------------------------------------------------------------------------
+// POST /api/auth/google/callback
+// Receives Supabase access_token, verifies it server-side, issues JWT cookie.
+// No validateRegister/validateLogin — Google handles its own validation.
+// ---------------------------------------------------------------------------
+router.post('/google/callback', googleCallback);
 
 // ---------------------------------------------------------------------------
 // POST /api/auth/forgot-password

@@ -4,6 +4,7 @@ import { useAuth } from '../../context/AuthContext';
 import Logo from '../../components/ui/Logo';
 import Button from '../../components/ui/Button';
 import Alert from '../../components/ui/Alert';
+import GoogleSignInButton from '../../components/ui/GoogleSignInButton';
 import { getApiErrorMessage } from '../../utils/format';
 
 /**
@@ -188,6 +189,9 @@ export default function RegisterPage() {
             {loading ? 'Creating account...' : 'Create account'}
           </Button>
         </form>
+
+        <div className="auth-divider">or</div>
+        <GoogleSignInButton label="Sign up with Google" />
       </div>
     </div>
   );
