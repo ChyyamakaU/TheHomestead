@@ -63,13 +63,29 @@ const Application = sequelize.define(
       allowNull: true,
     },
     status: {
-      type: DataTypes.ENUM('pending', 'under_review', 'approved', 'rejected'),
+      type: DataTypes.ENUM('pending', 'under_review', 'approved', 'rejected', 'payment_completed'),
       allowNull: false,
       defaultValue: 'pending',
     },
     admin_notes: {
       type: DataTypes.TEXT,
       allowNull: true,
+    },
+    // ── Payment tracking fields (populated on approval) ───────────────────
+    payment_status: {
+      type: DataTypes.ENUM('unpaid', 'pending_payment', 'paid', 'expired'),
+      allowNull: true,  // null until the application is approved
+      defaultValue: null,
+    },
+    approved_at: {
+      type: DataTypes.DATE,
+      allowNull: true,
+      defaultValue: null,
+    },
+    payment_deadline: {
+      type: DataTypes.DATE,
+      allowNull: true,
+      defaultValue: null,
     },
   },
   {

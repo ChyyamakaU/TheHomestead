@@ -1,7 +1,7 @@
 'use strict';
 
 const { Op } = require('sequelize');
-const { Application, Apartment } = require('../models');
+const { Application, Apartment, Payment, PaymentConfig, sequelize } = require('../models');
 
 // ---------------------------------------------------------------------------
 // Validation helpers (same rules as viewing requests for consistency)
@@ -203,17 +203,18 @@ const getAllApplications = async (req, res, next) => {
 // ---------------------------------------------------------------------------
 const getApplicationStats = async (req, res, next) => {
   try {
-    const [total, pending, under_review, approved, rejected] = await Promise.all([
+    const [total, pending, under_review, approved, rejected, payment_completed] = await Promise.all([
       Application.count(),
       Application.count({ where: { status: 'pending' } }),
       Application.count({ where: { status: 'under_review' } }),
       Application.count({ where: { status: 'approved' } }),
       Application.count({ where: { status: 'rejected' } }),
+      Application.count({ where: { status: 'payment_completed' } }),
     ]);
 
     return res.status(200).json({
       status: 'success',
-      stats: { total, pending, under_review, approved, rejected },
+      stats: { total, pending, under_review, approved, rejected, payment_completed },
     });
   } catch (error) {
     next(error);
@@ -253,22 +254,29 @@ const getApplicationById = async (req, res, next) => {
 // ---------------------------------------------------------------------------
 // PATCH /api/applications/:id
 // Admin only — updates status and/or admin_notes.
+// When status transitions to 'approved', creates a pending Payment record
+// and sets payment_status = 'unpaid' so the applicant can pay via Paystack.
 // ---------------------------------------------------------------------------
 const updateApplication = async (req, res, next) => {
+  const t = await sequelize.transaction();
   try {
-    const application = await Application.findByPk(req.params.id);
+    const application = await Application.findByPk(req.params.id, {
+      include: [
+        { model: Apartment, as: 'apartment', attributes: ['id', 'title', 'availability', 'price', 'payment_period'], required: false },
+      ],
+      transaction: t,
+    });
 
     if (!application) {
-      return res.status(404).json({
-        status: 'error',
-        message: 'Application not found.',
-      });
+      await t.rollback();
+      return res.status(404).json({ status: 'error', message: 'Application not found.' });
     }
 
     const { status, admin_notes } = req.body;
-    const validStatuses = ['pending', 'under_review', 'approved', 'rejected'];
+    const validStatuses = ['pending', 'under_review', 'approved', 'rejected', 'payment_completed'];
 
     if (status !== undefined && !validStatuses.includes(status)) {
+      await t.rollback();
       return res.status(400).json({
         status: 'error',
         message: `Invalid status. Must be one of: ${validStatuses.join(', ')}.`,
@@ -280,20 +288,110 @@ const updateApplication = async (req, res, next) => {
     if (admin_notes !== undefined) updates.admin_notes = admin_notes;
 
     if (Object.keys(updates).length === 0) {
-      return res.status(400).json({
-        status: 'error',
-        message: 'No valid fields provided to update.',
-      });
+      await t.rollback();
+      return res.status(400).json({ status: 'error', message: 'No valid fields provided to update.' });
     }
 
-    await application.update(updates);
+    const wasAlreadyApproved = application.status === 'approved';
+    const isBeingApproved    = status === 'approved' && !wasAlreadyApproved;
 
-    return res.status(200).json({
-      status:      'success',
-      message:     'Application updated successfully.',
-      application,
+    // ── On approval: create a pending payment obligation ─────────────────
+    if (isBeingApproved) {
+      // Must have a registered user to pay
+      if (!application.user_id) {
+        await t.rollback();
+        return res.status(400).json({
+          status: 'error',
+          message: 'This application is not linked to a registered user account and cannot be approved for online payment.',
+        });
+      }
+
+      // Find the first active PaymentConfig to use as the payment template.
+      // Admin should ensure a suitable config exists (e.g. "Rent Payment").
+      const config = await PaymentConfig.findOne({
+        where: { is_active: true },
+        order: [['created_at', 'ASC']],
+        transaction: t,
+      });
+
+      if (!config) {
+        await t.rollback();
+        return res.status(400).json({
+          status: 'error',
+          message: 'No active payment configuration found. Please create a payment configuration in Payment Settings before approving applications.',
+        });
+      }
+
+      // Check no active pending/processing payment already exists for this application
+      const existingPayment = await Payment.findOne({
+        where: {
+          application_id: application.id,
+          status: { [Op.in]: ['pending', 'processing', 'paid'] },
+        },
+        transaction: t,
+      });
+
+      if (!existingPayment) {
+        // Generate reference — format: HM-YYYYMMDD-XXXXX
+        const reference =
+          'HM-' +
+          new Date().toISOString().slice(0, 10).replace(/-/g, '') +
+          '-' +
+          Math.random().toString(36).toUpperCase().slice(2, 7);
+
+        await Payment.create(
+          {
+            reference,
+            user_id:          application.user_id,
+            apartment_id:     application.apartment_id,
+            application_id:   application.id,
+            payment_config_id: config.id,
+            purpose:          config.purpose,
+            amount:           config.amount,
+            currency:         config.currency || 'NGN',
+            payment_method:   'paystack',
+            status:           'pending',
+          },
+          { transaction: t }
+        );
+      }
+
+      // Set approval timestamp, deadline (7 days), and payment_status
+      const approvedAt = new Date();
+      const deadline   = new Date(approvedAt);
+      deadline.setDate(deadline.getDate() + 7);
+
+      updates.approved_at      = approvedAt;
+      updates.payment_deadline = deadline;
+      updates.payment_status   = 'unpaid';
+    }
+
+    // ── On rejection: clear any pending payment and mark expired ─────────
+    if (status === 'rejected' && application.payment_status === 'unpaid') {
+      await Payment.update(
+        { status: 'cancelled' },
+        {
+          where: { application_id: application.id, status: { [Op.in]: ['pending'] } },
+          transaction: t,
+        }
+      );
+      updates.payment_status = 'expired';
+    }
+
+    await application.update(updates, { transaction: t });
+    await t.commit();
+
+    // Re-fetch with associations for the response
+    const updated = await Application.findByPk(application.id, {
+      include: [
+        { model: Apartment, as: 'apartment', attributes: ['id', 'title', 'city', 'state', 'status', 'availability', 'price'], required: false },
+        { model: Payment, as: 'payments', attributes: ['id', 'reference', 'amount', 'currency', 'status', 'created_at'], required: false },
+      ],
     });
+
+    return res.status(200).json({ status: 'success', message: 'Application updated successfully.', application: updated });
   } catch (error) {
+    await t.rollback();
     next(error);
   }
 };
@@ -333,11 +431,14 @@ module.exports = {
   deleteApplication,
   getMyApplications,
   getMyApplicationById,
+  getMyApplicationPayment,
+  getApplicationPaymentAdmin,
 };
 
 // ---------------------------------------------------------------------------
 // GET /api/applications/my
-// Tenant only — returns the authenticated user's own applications.
+// Tenant only — returns the authenticated user's own applications,
+// including any linked payment obligation so the dashboard can show Pay Now.
 // ---------------------------------------------------------------------------
 async function getMyApplications(req, res, next) {
   try {
@@ -359,6 +460,17 @@ async function getMyApplications(req, res, next) {
             },
           ],
         },
+        {
+          model: Payment,
+          as: 'payments',
+          attributes: ['id', 'reference', 'amount', 'currency', 'purpose', 'status', 'payment_method', 'created_at'],
+          required: false,
+          where: { status: { [Op.in]: ['pending', 'processing', 'paid'] } },
+          // Most recent first so we pick the active obligation
+          order: [['created_at', 'DESC']],
+          limit: 1,
+          separate: true,
+        },
       ],
       order: [['created_at', 'DESC']],
     });
@@ -371,7 +483,7 @@ async function getMyApplications(req, res, next) {
 
 // ---------------------------------------------------------------------------
 // GET /api/applications/my/:id
-// Tenant only — single application detail. Ensures ownership.
+// Tenant only — single application detail with linked payment.
 // ---------------------------------------------------------------------------
 async function getMyApplicationById(req, res, next) {
   try {
@@ -384,6 +496,12 @@ async function getMyApplicationById(req, res, next) {
           attributes: ['id', 'title', 'city', 'state', 'slug', 'price', 'payment_period', 'availability'],
           required: false,
         },
+        {
+          model: Payment,
+          as: 'payments',
+          attributes: ['id', 'reference', 'amount', 'currency', 'purpose', 'status', 'paystack_reference', 'verified_at', 'created_at'],
+          required: false,
+        },
       ],
     });
 
@@ -392,6 +510,85 @@ async function getMyApplicationById(req, res, next) {
     }
 
     return res.status(200).json({ status: 'success', application });
+  } catch (error) {
+    next(error);
+  }
+}
+
+// ---------------------------------------------------------------------------
+// GET /api/applications/my/:id/payment
+// Tenant only — fetch the active payment obligation for one of their approved
+// applications. Used by the Pay Now button on the dashboard.
+// ---------------------------------------------------------------------------
+async function getMyApplicationPayment(req, res, next) {
+  try {
+    const application = await Application.findOne({
+      where: { id: req.params.id, user_id: req.user.id },
+      attributes: ['id', 'status', 'payment_status', 'payment_deadline', 'approved_at', 'apartment_title'],
+    });
+
+    if (!application) {
+      return res.status(404).json({ status: 'error', message: 'Application not found.' });
+    }
+
+    if (!['approved', 'payment_completed'].includes(application.status)) {
+      return res.status(400).json({
+        status: 'error',
+        message: 'This application has not been approved.',
+      });
+    }
+
+    const payment = await Payment.findOne({
+      where: {
+        application_id: application.id,
+        user_id: req.user.id,
+        status: { [Op.in]: ['pending', 'processing', 'paid'] },
+      },
+      include: [
+        {
+          model: require('../models').PaymentConfig,
+          as: 'paymentConfig',
+          attributes: ['purpose', 'description'],
+          required: false,
+        },
+      ],
+      order: [['created_at', 'DESC']],
+    });
+
+    return res.status(200).json({ status: 'success', application, payment: payment || null });
+  } catch (error) {
+    next(error);
+  }
+}
+
+// ---------------------------------------------------------------------------
+// GET /api/applications/:id/payment
+// Admin only — fetch the payment record for any application.
+// ---------------------------------------------------------------------------
+async function getApplicationPaymentAdmin(req, res, next) {
+  try {
+    const application = await Application.findByPk(req.params.id, {
+      attributes: ['id', 'status', 'payment_status', 'payment_deadline', 'approved_at', 'apartment_title', 'full_name', 'email'],
+    });
+
+    if (!application) {
+      return res.status(404).json({ status: 'error', message: 'Application not found.' });
+    }
+
+    const payments = await Payment.findAll({
+      where: { application_id: application.id },
+      include: [
+        {
+          model: require('../models').User,
+          as: 'user',
+          attributes: ['id', 'first_name', 'last_name', 'email'],
+          required: false,
+        },
+      ],
+      order: [['created_at', 'DESC']],
+    });
+
+    return res.status(200).json({ status: 'success', application, payments });
   } catch (error) {
     next(error);
   }

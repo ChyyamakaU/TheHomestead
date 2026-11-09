@@ -989,3 +989,154 @@
   gap: var(--space-sm);
   max-width: 540px;
 }
+
+
+/* ─── PAYMENT OBLIGATION PANEL (tenant application cards) ── */
+.payment-obligation {
+  margin-top: var(--space-sm);
+  padding: var(--space-sm);
+  background-color: rgba(201, 138, 27, 0.06);
+  border: 1px solid rgba(201, 138, 27, 0.3);
+  border-radius: var(--radius-md);
+}
+.payment-obligation--success {
+  background-color: rgba(46, 125, 82, 0.06);
+  border-color: rgba(46, 125, 82, 0.3);
+}
+.payment-obligation--pending {
+  background-color: var(--mist);
+  border-color: var(--stone-light);
+}
+
+.payment-obligation__title {
+  font-size: var(--text-sm);
+  font-weight: 700;
+  color: var(--midnight);
+  margin-bottom: var(--space-xs);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.payment-obligation__icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  background-color: var(--success);
+  color: var(--white);
+  border-radius: 50%;
+  font-size: 11px;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+.payment-obligation__breakdown {
+  margin: var(--space-xs) 0;
+  border: 1px solid rgba(201, 138, 27, 0.2);
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+}
+.payment-obligation__row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 12px;
+  font-size: var(--text-sm);
+  background-color: var(--white);
+}
+.payment-obligation__row + .payment-obligation__row {
+  border-top: 1px solid var(--stone-light);
+}
+.payment-obligation__total {
+  font-weight: 600;
+  background-color: var(--mist);
+}
+.payment-obligation__amount {
+  font-weight: 600;
+  color: var(--midnight);
+}
+
+.payment-obligation__deadline {
+  font-size: var(--text-xs);
+  color: var(--stone-deep);
+  margin: var(--space-xs) 0 0;
+}
+.payment-obligation__deadline--urgent {
+  color: var(--error);
+  font-weight: 600;
+}
+
+.payment-obligation__ref {
+  font-size: var(--text-xs);
+  color: var(--stone-dark);
+  margin-top: 4px;
+}
+
+.payment-obligation__note {
+  font-size: var(--text-sm);
+  color: var(--stone-deep);
+  margin: 0;
+}
+
+.payment-obligation__processing {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: var(--space-sm);
+  font-size: var(--text-sm);
+  color: var(--stone-deep);
+}
+
+.payment-obligation__btn {
+  margin-top: var(--space-sm);
+  width: 100%;
+}
+
+/* Record card highlight (approved + payment due) */
+.record-card--highlight {
+  border-color: rgba(201, 138, 27, 0.5);
+  box-shadow: 0 0 0 3px rgba(201, 138, 27, 0.1);
+}
+
+/* ─── ADMIN PAYMENT SUMMARY (application detail modal) ──── */
+.admin-payment-summary {
+  background-color: var(--mist);
+  border: 1px solid var(--stone-light);
+  border-radius: var(--radius-md);
+  padding: var(--space-sm);
+  margin: var(--space-sm) 0;
+}
+.admin-payment-summary__title {
+  font-size: var(--text-md);
+  font-weight: 600;
+  color: var(--midnight);
+  margin-bottom: var(--space-xs);
+}
+
+/* Admin table helpers */
+.admin-table__muted { color: var(--stone-dark); }
+.admin-table__amount {
+  display: block;
+  font-size: var(--text-xs);
+  color: var(--stone-deep);
+  margin-top: 2px;
+}
+
+/* Summary card alert variant */
+.summary-card--alert {
+  border-color: rgba(201, 138, 27, 0.4);
+  background-color: rgba(201, 138, 27, 0.04);
+}
+.summary-card__link {
+  display: inline-block;
+  font-size: var(--text-xs);
+  font-weight: 500;
+  color: var(--brass-dark);
+  margin-top: 6px;
+  text-decoration: underline;
+}
+.summary-card__link--cta {
+  font-weight: 700;
+  color: var(--midnight);
+}

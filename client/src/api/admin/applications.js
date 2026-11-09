@@ -41,3 +41,11 @@ export const updateApplication = (id, data) =>
  */
 export const deleteApplication = (id) =>
   apiClient.delete(`/applications/${id}`).then((r) => r.data);
+
+/**
+ * Admin: fetch the payment record(s) for a specific application.
+ * @param {number|string} id
+ * @returns {Promise<object>} { application, payments }
+ */
+export const getApplicationPayment = (id) =>
+  apiClient.get(`/applications/${id}/payment`).then((r) => r.data);

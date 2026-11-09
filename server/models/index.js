@@ -12,6 +12,8 @@ const Application    = require('./Application');
 const SavedApartment = require('./SavedApartment');
 const PaymentConfig  = require('./PaymentConfig');
 const Payment        = require('./Payment');
+const Tenant         = require('./Tenant');
+const AuditLog       = require('./AuditLog');
 
 // ---------------------------------------------------------------------------
 // Associations
@@ -120,6 +122,18 @@ User.hasMany(PaymentConfig, { foreignKey: 'created_by', as: 'createdConfigs' });
 PaymentConfig.belongsTo(User, { foreignKey: 'created_by', as: 'creator' });
 
 // ---------------------------------------------------------------------------
+// Tenant associations
+// ---------------------------------------------------------------------------
+User.hasMany(Tenant,        { foreignKey: 'user_id',        as: 'tenancies',    onDelete: 'RESTRICT' });
+Tenant.belongsTo(User,      { foreignKey: 'user_id',        as: 'user' });
+Apartment.hasMany(Tenant,   { foreignKey: 'apartment_id',   as: 'tenancies',    onDelete: 'SET NULL' });
+Tenant.belongsTo(Apartment, { foreignKey: 'apartment_id',   as: 'apartment' });
+Application.hasOne(Tenant,  { foreignKey: 'application_id', as: 'tenant',       onDelete: 'SET NULL' });
+Tenant.belongsTo(Application, { foreignKey: 'application_id', as: 'application' });
+Payment.hasOne(Tenant,      { foreignKey: 'payment_id',     as: 'tenant',       onDelete: 'SET NULL' });
+Tenant.belongsTo(Payment,   { foreignKey: 'payment_id',     as: 'payment' });
+
+// ---------------------------------------------------------------------------
 const db = {
   sequelize,
   User,
@@ -132,6 +146,8 @@ const db = {
   SavedApartment,
   PaymentConfig,
   Payment,
+  Tenant,
+  AuditLog,
 };
 
 module.exports = db;

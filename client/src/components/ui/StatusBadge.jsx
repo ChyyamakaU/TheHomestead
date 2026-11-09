@@ -30,6 +30,18 @@ const STATUS_MAP = {
   under_review: { variant: 'under_review', label: 'Under review' },
   approved: { variant: 'approved', label: 'Approved' },
   rejected: { variant: 'rejected', label: 'Rejected' },
+  payment_completed: { variant: 'payment_completed', label: 'Completed' },
+
+  // Payment statuses (on Application)
+  unpaid: { variant: 'unpaid', label: 'Unpaid' },
+  pending_payment: { variant: 'pending_payment', label: 'Pending payment' },
+  paid: { variant: 'paid', label: 'Paid' },
+  expired: { variant: 'expired', label: 'Expired' },
+
+  // Payment record statuses
+  processing: { variant: 'processing', label: 'Processing' },
+  failed: { variant: 'failed', label: 'Failed' },
+  refunded: { variant: 'refunded', label: 'Refunded' },
 };
 
 export default function StatusBadge({ status, type = 'availability' }) {

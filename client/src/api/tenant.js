@@ -7,6 +7,10 @@ export const getMyApplications = () =>
 export const getMyApplicationById = (id) =>
   apiClient.get(`/applications/my/${id}`).then((r) => r.data);
 
+// Tenant: payment obligation for a specific approved application
+export const getMyApplicationPayment = (id) =>
+  apiClient.get(`/applications/my/${id}/payment`).then((r) => r.data);
+
 // Tenant: own viewing requests
 export const getMyViewingRequests = () =>
   apiClient.get('/viewing-requests/my').then((r) => r.data);

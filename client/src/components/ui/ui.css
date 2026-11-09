@@ -145,6 +145,28 @@
   color: var(--mist);
 }
 
+/* ── Application/payment status badges ─────────────────── */
+.badge--available    { background-color: rgba(46, 125, 82, 0.12);  color: var(--success); }
+.badge--occupied     { background-color: rgba(20, 33, 61, 0.12);   color: var(--midnight); }
+.badge--unavailable  { background-color: rgba(178, 59, 59, 0.12);  color: var(--error); }
+.badge--published    { background-color: rgba(46, 125, 82, 0.12);  color: var(--success); }
+.badge--pending      { background-color: rgba(201, 138, 27, 0.12); color: var(--warning); }
+.badge--confirmed    { background-color: rgba(46, 125, 82, 0.12);  color: var(--success); }
+.badge--cancelled    { background-color: rgba(178, 59, 59, 0.12);  color: var(--error); }
+.badge--under_review { background-color: rgba(20, 33, 61, 0.08);   color: var(--midnight); }
+.badge--approved     { background-color: rgba(46, 125, 82, 0.12);  color: var(--success); }
+.badge--rejected     { background-color: rgba(178, 59, 59, 0.12);  color: var(--error); }
+.badge--payment_completed { background-color: var(--midnight); color: var(--brass-light); }
+
+/* Payment status badges */
+.badge--unpaid         { background-color: rgba(201, 138, 27, 0.15); color: #8a6200; }
+.badge--pending_payment{ background-color: rgba(201, 138, 27, 0.15); color: #8a6200; }
+.badge--paid           { background-color: rgba(46, 125, 82, 0.12);  color: var(--success); }
+.badge--expired        { background-color: rgba(178, 59, 59, 0.12);  color: var(--error); }
+.badge--processing     { background-color: rgba(20, 33, 61, 0.08);   color: var(--midnight); }
+.badge--failed         { background-color: rgba(178, 59, 59, 0.12);  color: var(--error); }
+.badge--refunded       { background-color: rgba(201, 138, 27, 0.08); color: var(--warning); }
+
 /* ─── ALERTS ──────────────────────────────────────────────── */
 .alert {
   padding: var(--space-sm) var(--space-md);
