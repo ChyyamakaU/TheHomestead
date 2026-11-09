@@ -44,10 +44,12 @@ const User = sequelize.define(
     },
     password: {
       type: DataTypes.STRING(255),
-      allowNull: false,
-      validate: {
-        notEmpty: { msg: 'Password is required' },
-      },
+      allowNull: true, // null for Google-authenticated users
+    },
+    supabase_id: {
+      type: DataTypes.STRING(255),
+      allowNull: true,
+      unique: true, // one Supabase account → one local user
     },
     role: {
       type: DataTypes.ENUM('superadmin', 'admin', 'tenant'),
@@ -78,7 +80,7 @@ const User = sequelize.define(
         }
       },
       beforeUpdate: async (user) => {
-        if (user.changed('password')) {
+        if (user.changed('password') && user.password) {
           const salt = await bcrypt.genSalt(12);
           user.password = await bcrypt.hash(user.password, salt);
         }
