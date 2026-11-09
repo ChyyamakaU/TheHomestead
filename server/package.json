@@ -15,8 +15,7 @@
   "type": "commonjs",
   "jest": {
     "testEnvironment": "node",
-    "testMatch": ["**/__tests__/**/*.test.js"],
-    "setupFilesAfterFramework": []
+    "testMatch": ["**/__tests__/**/*.test.js"]
   },
   "dependencies": {
     "bcryptjs": "^2.4.3",

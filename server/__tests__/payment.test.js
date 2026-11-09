@@ -334,7 +334,7 @@ describe('verifyPaystackPayment', () => {
 
     await verifyPaystackPayment(req, res, next);
 
-    expect(mockTenant.create).toBeUndefined(); // Never called — not even mocked
+    expect(mockTenant.create).not.toHaveBeenCalled();
     // Response should be 200 but payment status is failed
     expect(processingPayment.update).toHaveBeenCalledWith(
       expect.objectContaining({ status: 'failed' })
@@ -459,7 +459,7 @@ describe('paystackWebhook', () => {
     expect(res.status).toHaveBeenCalledWith(200);
     // But Tenant.create should not have been called
     // (payment.status === 'paid' short-circuits before _completePayment)
-    expect(mockTenant.create).toBeUndefined();
+    expect(mockTenant.create).not.toHaveBeenCalled();
   });
 
   // Test 14: successful payment creates tenant and allocates apartment
