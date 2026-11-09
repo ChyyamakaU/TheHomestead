@@ -11,6 +11,19 @@ require('dotenv').config();
 const app = express();
 
 // ---------------------------------------------------------------------------
+// 0. PROXY TRUST
+//    Render (and most PaaS platforms) sit behind a load balancer that injects
+//    X-Forwarded-For. Setting trust proxy to 1 tells Express to read the real
+//    client IP from the first hop in that header — the Render proxy — rather
+//    than treating req.socket.remoteAddress (the proxy's IP) as the client.
+//
+//    '1' means trust exactly one proxy hop. This prevents IP spoofing while
+//    satisfying express-rate-limit's ERR_ERL_UNEXPECTED_X_FORWARDED_FOR check.
+//    Using `true` would blindly trust an unlimited chain and allow spoofing.
+// ---------------------------------------------------------------------------
+app.set('trust proxy', 1);
+
+// ---------------------------------------------------------------------------
 // 1. SECURITY HEADERS — helmet sets sensible HTTP security headers:
 //    X-Content-Type-Options, X-Frame-Options, HSTS (in prod), etc.
 //    crossOriginResourcePolicy is relaxed to 'cross-origin' so that
