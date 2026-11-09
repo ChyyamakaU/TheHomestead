@@ -1,35 +1,73 @@
 import { useState, useEffect } from 'react';
+import { useSearchParams, Link } from 'react-router-dom';
 import Spinner from '../../components/ui/Spinner';
 import StatusBadge from '../../components/ui/StatusBadge';
-import { getMyPayments } from '../../api/payments';
-import { formatDate } from '../../utils/format';
+import Alert from '../../components/ui/Alert';
+import EmptyState from '../../components/ui/EmptyState';
+import {
+  getMyPayments,
+  verifyPaystackPayment,
+} from '../../api/payments';
+import { formatDate, getApiErrorMessage } from '../../utils/format';
 
 /**
- * DashboardPaymentsPage — tenant view of their payment history.
+ * DashboardPaymentsPage — tenant payment history.
+ *
+ * Also handles the return from Paystack checkout:
+ * Paystack redirects to /dashboard/payments?ref=HM-... after payment.
+ * On mount, if a ref param is present, we call the backend to verify it.
  */
 export default function DashboardPaymentsPage() {
+  const [searchParams, setSearchParams] = useSearchParams();
   const [payments, setPayments] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [verifying, setVerifying] = useState(false);
+  const [verifyResult, setVerifyResult] = useState(null); // { status, message }
 
+  const ref = searchParams.get('ref');
+
+  // On mount: if returning from Paystack, verify then refresh list
   useEffect(() => {
-    getMyPayments()
-      .then((data) => setPayments(data.payments || []))
-      .catch(() => {})
-      .finally(() => setLoading(false));
+    const init = async () => {
+      if (ref) {
+        setVerifying(true);
+        try {
+          const data = await verifyPaystackPayment(ref);
+          setVerifyResult({
+            type: data.payment?.status === 'paid' ? 'success' : 'error',
+            message:
+              data.payment?.status === 'paid'
+                ? 'Payment confirmed successfully.'
+                : 'Payment could not be verified. Please contact support if you were charged.',
+          });
+        } catch (err) {
+          setVerifyResult({ type: 'error', message: getApiErrorMessage(err) });
+        } finally {
+          setVerifying(false);
+          // Remove ref from URL so refresh doesn't re-verify
+          setSearchParams({}, { replace: true });
+        }
+      }
+
+      // Fetch payment list
+      try {
+        const data = await getMyPayments();
+        setPayments(data.payments || []);
+      } catch {
+        setPayments([]);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    init();
   }, []);
 
   const formatAmount = (amount) =>
-    `₦${Number(amount).toLocaleString('en-NG')}`;
+    `₦${Number(amount).toLocaleString('en-NG', { minimumFractionDigits: 2 })}`;
 
-  const formatMethod = (method) =>
-    method === 'cash' ? 'Cash' : method === 'paystack' ? 'Paystack' : method;
-
-  if (loading) {
-    return (
-      <div className="page-loader">
-        <Spinner size={40} />
-      </div>
-    );
+  if (loading || verifying) {
+    return <div className="page-loader"><Spinner size={40} /></div>;
   }
 
   return (
@@ -37,56 +75,87 @@ export default function DashboardPaymentsPage() {
       <div className="admin-page__header">
         <div>
           <h1>Payments</h1>
+          <p className="admin-page__sub">Your payment history and pending charges.</p>
         </div>
       </div>
 
+      {/* Paystack return result */}
+      {verifyResult && (
+        <Alert variant={verifyResult.type === 'success' ? 'success' : 'error'}>
+          {verifyResult.message}
+        </Alert>
+      )}
+
       {payments.length === 0 ? (
-        <div className="dashboard-section">
-          <p className="dashboard-section__empty">
-            No payment records yet. Payments will appear here when they are created.
-          </p>
-        </div>
+        <EmptyState
+          title="No payment records"
+          message="Payments will appear here when they are created by the Homestead team."
+          action={<Link to="/apartments" className="btn btn--secondary">Browse apartments</Link>}
+        />
       ) : (
-        <div className="record-cards">
-          {payments.map((pmt) => (
-            <div key={pmt.id} className="record-card">
-              {/* Pending cash payment notice */}
-              {pmt.payment_method === 'cash' && pmt.status === 'pending' && (
-                <div className="record-card__notice">
-                  <strong>Payment pending.</strong>{' '}
-                  This payment is pending. Please follow the cash payment instructions provided by our team. Contact us to confirm your payment.
+        <div className="record-grid">
+          {payments.map((payment) => (
+            <div key={payment.id} className="record-card">
+              <div className="record-card__body">
+                <div className="record-card__title">
+                  {payment.purpose}
                 </div>
-              )}
 
-              <div className="record-card__header">
-                <div>
-                  <p className="record-card__ref">
-                    <code>{pmt.reference}</code>
+                {payment.apartment && (
+                  <p className="record-card__location">
+                    {payment.apartment.title}
+                    {payment.apartment.city && ` — ${payment.apartment.city}`}
                   </p>
-                  <p className="record-card__purpose">{pmt.purpose}</p>
-                </div>
-                <StatusBadge status={pmt.status} />
-              </div>
+                )}
 
-              <div className="record-card__details">
-                <div className="record-card__detail">
-                  <span className="record-card__detail-label">Amount</span>
-                  <span className="record-card__detail-value">{formatAmount(pmt.amount)}</span>
+                <div className="record-card__meta">
+                  <span className="record-card__meta-item">
+                    <strong>Reference:</strong> {payment.reference}
+                  </span>
+                  <span className="record-card__meta-item">
+                    <strong>Amount:</strong> {formatAmount(payment.amount)}
+                  </span>
+                  <span className="record-card__meta-item">
+                    <strong>Method:</strong>{' '}
+                    {payment.payment_method === 'cash' ? 'Cash' : 'Paystack'}
+                  </span>
+                  <span className="record-card__meta-item">
+                    <strong>Date:</strong> {formatDate(payment.created_at)}
+                  </span>
+                  {payment.verified_at && (
+                    <span className="record-card__meta-item">
+                      <strong>Confirmed:</strong> {formatDate(payment.verified_at)}
+                    </span>
+                  )}
                 </div>
-                <div className="record-card__detail">
-                  <span className="record-card__detail-label">Method</span>
-                  <span className="record-card__detail-value">{formatMethod(pmt.payment_method)}</span>
-                </div>
-                <div className="record-card__detail">
-                  <span className="record-card__detail-label">Date initiated</span>
-                  <span className="record-card__detail-value">{formatDate(pmt.created_at)}</span>
-                </div>
-                {pmt.apartment && (
-                  <div className="record-card__detail">
-                    <span className="record-card__detail-label">Apartment</span>
-                    <span className="record-card__detail-value">{pmt.apartment.title}</span>
+
+                {/* Pending cash instructions */}
+                {payment.payment_method === 'cash' && payment.status === 'pending' && (
+                  <div className="record-card__note">
+                    This payment is pending. Please follow the cash payment instructions provided
+                    by our team. Contact us once payment has been made so we can confirm receipt.
                   </div>
                 )}
+
+                {payment.notes && (
+                  <p className="record-card__message">{payment.notes}</p>
+                )}
+
+                {/* Receipt link — only for paid payments */}
+                {payment.status === 'paid' && (
+                  <div style={{ marginTop: 'var(--space-xs)' }}>
+                    <Link
+                      to={`/dashboard/payments/${payment.id}/receipt`}
+                      className="auth-card__link"
+                    >
+                      View receipt →
+                    </Link>
+                  </div>
+                )}
+              </div>
+
+              <div className="record-card__badge">
+                <StatusBadge status={payment.status} />
               </div>
             </div>
           ))}

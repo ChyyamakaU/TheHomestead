@@ -36,6 +36,7 @@ import DashboardApplicationsPage from './pages/dashboard/DashboardApplicationsPa
 import DashboardViewingsPage from './pages/dashboard/DashboardViewingsPage';
 import DashboardSavedPage from './pages/dashboard/DashboardSavedPage';
 import DashboardPaymentsPage from './pages/dashboard/DashboardPaymentsPage';
+import ReceiptPage from './pages/dashboard/ReceiptPage';
 import DashboardProfilePage from './pages/dashboard/DashboardProfilePage';
 
 // Styles
@@ -107,6 +108,7 @@ export default function App() {
             <Route path="viewings" element={<DashboardViewingsPage />} />
             <Route path="saved" element={<DashboardSavedPage />} />
             <Route path="payments" element={<DashboardPaymentsPage />} />
+            <Route path="payments/:id/receipt" element={<ReceiptPage />} />
             <Route path="profile" element={<DashboardProfilePage />} />
           </Route>
 

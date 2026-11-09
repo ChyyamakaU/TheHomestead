@@ -81,6 +81,7 @@
   position: relative;
   display: flex;
   align-items: center;
+  width: 100%;
 }
 .password-field__input {
   width: 100%;
@@ -107,7 +108,7 @@
 /* ─── SUMMARY CARDS (dashboard) ───────────────────────────── */
 .summary-grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(4, 1fr);
   gap: var(--space-md);
   margin-bottom: var(--space-lg);
 }

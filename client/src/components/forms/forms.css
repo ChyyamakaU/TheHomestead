@@ -29,6 +29,8 @@
 }
 
 .enquiry-form__input {
+  width: 100%;
+  box-sizing: border-box;
   height: 46px;
   padding: 0 14px;
   font-family: var(--font-body);

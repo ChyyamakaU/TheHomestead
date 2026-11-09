@@ -203,7 +203,6 @@ export default function HomePage() {
                   to={`/apartments?apartment_type=${encodeURIComponent(type)}`}
                   className="category-card"
                 >
-                  <span className="category-card__icon" aria-hidden="true"> home</span>
                   <span className="category-card__label">{type}</span>
                 </Link>
               ))}

@@ -10,6 +10,7 @@ import {
   getAllApplications,
 } from '../../api/admin/applications';
 import { getAllApartments } from '../../api/admin/apartments';
+import { getPaymentStats } from '../../api/payments';
 import { formatRelativeTime } from '../../utils/format';
 
 /**
@@ -25,6 +26,7 @@ export default function AdminDashboardPage() {
   const [apartments, setApartments] = useState([]);
   const [viewingStats, setViewingStats] = useState(null);
   const [applicationStats, setApplicationStats] = useState(null);
+  const [paymentStats, setPaymentStats] = useState(null);
   const [recentViewing, setRecentViewing] = useState([]);
   const [recentApps, setRecentApps] = useState([]);
 
@@ -33,13 +35,15 @@ export default function AdminDashboardPage() {
       getAllApartments(),
       getViewingRequestStats(),
       getApplicationStats(),
+      getPaymentStats(),
       getAllViewingRequests({ limit: 5 }),
       getAllApplications({ limit: 5 }),
     ])
-      .then(([aptData, vrStats, appStats, vrList, appList]) => {
+      .then(([aptData, vrStats, appStats, pmtStats, vrList, appList]) => {
         setApartments(aptData.apartments || []);
         setViewingStats(vrStats.stats);
         setApplicationStats(appStats.stats);
+        setPaymentStats(pmtStats.stats);
         setRecentViewing(vrList.viewingRequests || []);
         setRecentApps(appList.applications || []);
       })
@@ -85,6 +89,15 @@ export default function AdminDashboardPage() {
           <div className="summary-card__detail">
             {applicationStats?.pending || 0} pending
           </div>
+        </div>
+
+        <div className="summary-card">
+          <div className="summary-card__label">Payments</div>
+          <div className="summary-card__value">{paymentStats?.paid || 0}</div>
+          <div className="summary-card__detail">
+            {paymentStats?.pending || 0} pending · ₦{Number(paymentStats?.revenue || 0).toLocaleString('en-NG')} confirmed
+          </div>
+          <Link to="/admin/payments" className="summary-card__link">View all →</Link>
         </div>
       </div>
 
