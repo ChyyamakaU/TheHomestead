@@ -2,6 +2,10 @@
 
 const { Op } = require('sequelize');
 const { Apartment, Amenity, ApartmentAmenity, ApartmentImage } = require('../models');
+const {
+  deleteImage: deleteStoredImage,
+  isStorageConfigured,
+} = require('../services/storageService');
 
 // ---------------------------------------------------------------------------
 // Helper: standard apartment query options
@@ -224,9 +228,21 @@ const deleteApartment = async (req, res, next) => {
       return res.status(404).json({ status: 'error', message: 'Apartment not found.' });
     }
 
-    // Delete image files from the uploads folder before removing the DB record
+    // Delete image files from persistent storage and the uploads folder
+    // before removing the DB record.
     if (apartment.images && apartment.images.length > 0) {
       for (const image of apartment.images) {
+        if (isStorageConfigured()) {
+          try {
+            await deleteStoredImage(image.filename);
+          } catch (storageError) {
+            console.error(
+              `[apartments] Failed to delete ${image.filename} from storage:`,
+              storageError.message
+            );
+          }
+        }
+
         const filePath = path.join(__dirname, '..', 'uploads', image.filename);
         if (fs.existsSync(filePath)) {
           fs.unlinkSync(filePath);

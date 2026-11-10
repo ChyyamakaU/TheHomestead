@@ -3,6 +3,7 @@
 const multer = require('multer');
 const path = require('path');
 const fs = require('fs');
+const { isStorageConfigured } = require('../services/storageService');
 
 // Ensure the uploads directory exists at startup
 const uploadDir = path.join(__dirname, '..', 'uploads');
@@ -12,20 +13,31 @@ if (!fs.existsSync(uploadDir)) {
 
 // ---------------------------------------------------------------------------
 // Storage configuration
-// Files are saved to server/uploads/ on the local filesystem.
+//
+// Production: keep files in memory and upload them to Supabase Storage in the
+// controller. Render's filesystem is ephemeral, so files written to disk are
+// lost on every redeploy/restart.
+//
+// Development: if Supabase Storage is not configured, fall back to
+// server/uploads/ so the app still works offline.
+//
 // Each file gets a unique name: timestamp + original extension.
 // This prevents filename collisions if two files are uploaded with the same name.
 // ---------------------------------------------------------------------------
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, uploadDir);
-  },
-  filename: (req, file, cb) => {
-    const ext = path.extname(file.originalname).toLowerCase();
-    const uniqueName = `${Date.now()}-${Math.round(Math.random() * 1e6)}${ext}`;
-    cb(null, uniqueName);
-  },
-});
+const useObjectStorage = isStorageConfigured();
+
+const storage = useObjectStorage
+  ? multer.memoryStorage()
+  : multer.diskStorage({
+      destination: (req, file, cb) => {
+        cb(null, uploadDir);
+      },
+      filename: (req, file, cb) => {
+        const ext = path.extname(file.originalname).toLowerCase();
+        const uniqueName = `${Date.now()}-${Math.round(Math.random() * 1e6)}${ext}`;
+        cb(null, uniqueName);
+      },
+    });
 
 // ---------------------------------------------------------------------------
 // File filter

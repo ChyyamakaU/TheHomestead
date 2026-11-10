@@ -3,6 +3,29 @@
 const fs = require('fs');
 const path = require('path');
 const { Apartment, ApartmentImage } = require('../models');
+const {
+  uploadImage,
+  deleteImage: deleteStoredImage,
+  isStorageConfigured,
+} = require('../services/storageService');
+
+// ---------------------------------------------------------------------------
+// Helpers
+// ---------------------------------------------------------------------------
+
+// Generate a collision-resistant filename for uploads kept in memory.
+const makeFilename = (originalname) => {
+  const ext = path.extname(originalname || '').toLowerCase();
+  return `${Date.now()}-${Math.round(Math.random() * 1e6)}${ext}`;
+};
+
+// Remove any temporary files multer wrote to disk (no-op with memory storage).
+const cleanupLocalFiles = (files) => {
+  if (!files) return;
+  files.forEach((file) => {
+    if (file.path && fs.existsSync(file.path)) fs.unlinkSync(file.path);
+  });
+};
 
 // ---------------------------------------------------------------------------
 // POST /api/apartments/:id/images
@@ -16,11 +39,7 @@ const uploadImages = async (req, res, next) => {
 
     if (!apartment) {
       // Clean up any files multer already saved if the apartment doesn't exist
-      if (req.files) {
-        req.files.forEach((f) => {
-          if (fs.existsSync(f.path)) fs.unlinkSync(f.path);
-        });
-      }
+      cleanupLocalFiles(req.files);
       return res.status(404).json({ status: 'error', message: 'Apartment not found.' });
     }
 
@@ -35,9 +54,7 @@ const uploadImages = async (req, res, next) => {
 
     if (existingCount + req.files.length > 10) {
       // Clean up newly uploaded files since we are rejecting them
-      req.files.forEach((f) => {
-        if (fs.existsSync(f.path)) fs.unlinkSync(f.path);
-      });
+      cleanupLocalFiles(req.files);
       return res.status(400).json({
         status: 'error',
         message: `Cannot upload ${req.files.length} image(s). An apartment can have a maximum of 10 images. This apartment currently has ${existingCount}.`,
@@ -50,30 +67,60 @@ const uploadImages = async (req, res, next) => {
     });
 
     const baseOrder = existingCount;
-    const imageRecords = req.files.map((file, index) => ({
-      apartment_id: apartment.id,
-      filename: file.filename,
-      // Build the public URL from the filename
-      url: `/uploads/${file.filename}`,
-      // Auto-set first image as primary if no primary exists yet
-      is_primary: !hasPrimary && index === 0,
-      display_order: baseOrder + index,
-    }));
+    const useStorage = isStorageConfigured();
+    const storedFilenames = [];
+    const imageRecords = [];
 
-    const images = await ApartmentImage.bulkCreate(imageRecords);
+    try {
+      for (let index = 0; index < req.files.length; index += 1) {
+        const file = req.files[index];
+        let filename;
+        let url;
 
-    return res.status(201).json({
-      status: 'success',
-      message: `${images.length} image(s) uploaded successfully.`,
-      images,
-    });
-  } catch (error) {
-    // Clean up any uploaded files if the database operation failed
-    if (req.files) {
-      req.files.forEach((f) => {
-        if (fs.existsSync(f.path)) fs.unlinkSync(f.path);
+        if (useStorage) {
+          // Memory storage does not assign a filename, so generate one here.
+          filename = file.filename || makeFilename(file.originalname);
+          url = await uploadImage(file.buffer, filename, file.mimetype);
+          storedFilenames.push(filename);
+        } else {
+          filename = file.filename;
+          // Local development fallback: serve from server/uploads.
+          url = `/uploads/${file.filename}`;
+        }
+
+        imageRecords.push({
+          apartment_id: apartment.id,
+          filename,
+          url,
+          // Auto-set first image as primary if no primary exists yet
+          is_primary: !hasPrimary && index === 0,
+          display_order: baseOrder + index,
+        });
+      }
+
+      const images = await ApartmentImage.bulkCreate(imageRecords);
+
+      return res.status(201).json({
+        status: 'success',
+        message: `${images.length} image(s) uploaded successfully.`,
+        images,
       });
+    } catch (error) {
+      // Remove anything already persisted so a failed upload leaves no orphans.
+      cleanupLocalFiles(req.files);
+      await Promise.all(
+        storedFilenames.map((filename) =>
+          deleteStoredImage(filename).catch((cleanupError) => {
+            console.error(
+              `[images] Failed to clean up stored file ${filename}:`,
+              cleanupError.message
+            );
+          })
+        )
+      );
+      throw error;
     }
+  } catch (error) {
     next(error);
   }
 };
@@ -132,7 +179,20 @@ const deleteImage = async (req, res, next) => {
 
     const wasPrimary = image.is_primary;
 
-    // Delete the physical file from disk
+    // Remove the file from persistent storage. Older rows may still point at
+    // the local uploads directory, so try both locations without letting a
+    // missing file block the database delete.
+    if (isStorageConfigured()) {
+      try {
+        await deleteStoredImage(image.filename);
+      } catch (storageError) {
+        console.error(
+          `[images] Failed to delete ${image.filename} from storage:`,
+          storageError.message
+        );
+      }
+    }
+
     const filePath = path.join(__dirname, '..', 'uploads', image.filename);
     if (fs.existsSync(filePath)) {
       fs.unlinkSync(filePath);

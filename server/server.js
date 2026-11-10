@@ -3,6 +3,7 @@
 require('dotenv').config();
 const app = require('./app');
 const { connectToDatabase } = require('./config/database');
+const { isStorageConfigured } = require('./services/storageService');
 
 const PORT = process.env.PORT || 5000;
 
@@ -15,6 +16,13 @@ const PORT = process.env.PORT || 5000;
  */
 const startServer = async () => {
   await connectToDatabase();
+
+  if (process.env.NODE_ENV === 'production' && !isStorageConfigured()) {
+    console.warn(
+      '[storage] Supabase Storage is not configured. Uploaded images will be ' +
+      'written to the ephemeral filesystem and lost on the next redeploy.'
+    );
+  }
 
   app.listen(PORT, () => {
     console.log(`Server running in ${process.env.NODE_ENV || 'development'} mode on port ${PORT}`);
